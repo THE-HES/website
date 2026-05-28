@@ -1,0 +1,373 @@
+/* ============================================================
+   H.E.S. Design System — Colors & Typography
+   Hebrew Educational Society | thehes.org
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');
+/* ⚠️ FONT NOTE:
+   - Title font is "League Spartan" (available on Google Fonts — exact match).
+   - Body/heading font is "Gotham" (premium Tobias Frere-Jones typeface, not on Google Fonts).
+     Montserrat is used as a substitute. For pixel-perfect output, install Gotham and
+     replace 'Montserrat' with 'Gotham' throughout this file. */
+
+/* ============================================================
+   BASE COLOR TOKENS
+   ============================================================ */
+:root {
+  /* — Brand Blues — */
+  --hes-blue:        #1A1F8F;   /* Primary brand blue — dominant background */
+  --hes-blue-dark:   #0D1070;   /* Deep navy — layering, gradients */
+  --hes-blue-mid:    #2A35C7;   /* Mid blue — hover states, highlights */
+  --hes-blue-light:  #4B6BFF;   /* Light blue — gradient accents */
+
+  /* — Accent Colors — */
+  --hes-yellow:      #F5C400;   /* Golden yellow — subheads, rings, dots, dividers */
+  --hes-yellow-dark: #D4A900;   /* Darker yellow — pressed/hover yellow */
+  --hes-red:         #E8363A;   /* CTA red — urgent actions, highlight boxes */
+  --hes-red-dark:    #C42528;   /* Dark red — hover on red CTAs */
+  --hes-orange:      #F26522;   /* Summer/warm accent — camps, energy */
+  --hes-green:       #2AAB47;   /* Community/health green — volunteer, outreach */
+  --hes-green-dark:  #1D8A35;   /* Darker green — health flyer background zones */
+
+  /* — Neutrals — */
+  --hes-white:       #FFFFFF;
+  --hes-off-white:   #F8F7F2;   /* Warm near-white for backgrounds */
+  --hes-gray-light:  #E8E8E8;
+  --hes-gray:        #9A9A9A;
+  --hes-black:       #111111;
+
+  /* ============================================================
+     SEMANTIC COLOR TOKENS
+     ============================================================ */
+
+  /* Backgrounds */
+  --bg-primary:      var(--hes-blue);
+  --bg-secondary:    var(--hes-blue-dark);
+  --bg-accent:       var(--hes-yellow);
+  --bg-cta:          var(--hes-red);
+  --bg-warm:         var(--hes-orange);
+  --bg-light:        var(--hes-off-white);
+  --bg-green:        var(--hes-green);
+
+  /* Text on dark backgrounds */
+  --fg-on-dark:      var(--hes-white);
+  --fg-accent-on-dark: var(--hes-yellow);
+  --fg-cta-on-dark:  var(--hes-red);
+
+  /* Text on light backgrounds */
+  --fg-primary:      var(--hes-blue);
+  --fg-secondary:    var(--hes-blue-dark);
+  --fg-muted:        var(--hes-gray);
+
+  /* Interactive */
+  --color-cta:       var(--hes-red);
+  --color-cta-hover: var(--hes-red-dark);
+  --color-link:      var(--hes-yellow);
+  --color-link-hover: var(--hes-yellow-dark);
+
+  /* Borders & Rings */
+  --border-accent:   var(--hes-yellow);
+  --border-strong:   var(--hes-blue);
+
+  /* ============================================================
+     TYPOGRAPHY TOKENS
+     ============================================================ */
+
+  /* Font Families */
+  --font-display:    'League Spartan', 'Arial Black', sans-serif;
+  /* ✅ League Spartan — exact Canva brand kit title font, available on Google Fonts. */
+
+  --font-body:       'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  /* ⚠️ Gotham substitute — Montserrat is the closest Google Fonts match to Gotham
+     (geometric sans-serif). For pixel-perfect output, install Gotham and replace
+     'Montserrat' with 'Gotham' here. */
+
+  /* Font Sizes — from H.E.S. Canva Brand Kit */
+  --text-caption:   0.875rem;  /*  14px — Caption (Gotham) */
+  --text-body:      0.75rem;   /*  12px — Body (Gotham) */
+  --text-quote:     1rem;      /*  16px — Quote (Gotham italic) */
+  --text-subhead:   1.125rem;  /*  18px — Subheading (Gotham) */
+  --text-section:   1.25rem;   /*  20px — Section Header (Gotham) */
+  --text-heading:   1.9375rem; /*  31px — Heading (Gotham bold) */
+  --text-subtitle:  2.25rem;   /*  36px — Subtitle (Gotham) */
+  --text-title:     2.625rem;  /*  42px — Title (League Spartan) */
+
+  /* Extended scale for digital/UI use */
+  --text-xs:    0.75rem;   /*  12px */
+  --text-sm:    0.875rem;  /*  14px */
+  --text-base:  1rem;      /*  16px */
+  --text-md:    1.125rem;  /*  18px */
+  --text-lg:    1.25rem;   /*  20px */
+  --text-xl:    1.9375rem; /*  31px */
+  --text-2xl:   2.25rem;   /*  36px */
+  --text-3xl:   2.625rem;  /*  42px */
+  --text-4xl:   3.5rem;    /*  56px */
+  --text-5xl:   5rem;      /*  80px */
+
+  /* Font Weights */
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+  --weight-extrabold: 800;
+  --weight-black:    900;
+
+  /* Line Heights */
+  --leading-tight:   1.0;
+  --leading-snug:    1.15;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.7;
+
+  /* Letter Spacing */
+  --tracking-tight:  -0.02em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.05em;
+  --tracking-wider:   0.1em;
+  --tracking-widest:  0.15em;
+
+  /* ============================================================
+     SPACING TOKENS
+     ============================================================ */
+  --space-1:   0.25rem;  /*  4px */
+  --space-2:   0.5rem;   /*  8px */
+  --space-3:   0.75rem;  /* 12px */
+  --space-4:   1rem;     /* 16px */
+  --space-5:   1.25rem;  /* 20px */
+  --space-6:   1.5rem;   /* 24px */
+  --space-8:   2rem;     /* 32px */
+  --space-10:  2.5rem;   /* 40px */
+  --space-12:  3rem;     /* 48px */
+  --space-16:  4rem;     /* 64px */
+  --space-20:  5rem;     /* 80px */
+  --space-24:  6rem;     /* 96px */
+
+  /* ============================================================
+     SHAPE TOKENS
+     ============================================================ */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-pill: 9999px;   /* Stadium / capsule shape for CTAs */
+  --radius-circle: 50%;
+
+  /* Photo ring (circular crop with yellow border) */
+  --photo-ring-width:  5px;
+  --photo-ring-color:  var(--hes-yellow);
+
+  /* ============================================================
+     SHADOW TOKENS
+     (Brand relies on color contrast over shadows; shadows minimal)
+     ============================================================ */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.15);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.2);
+  --shadow-lg:  0 8px 24px rgba(0,0,0,0.3);
+
+  /* ============================================================
+     SEMANTIC TYPE ROLES — H.E.S. Canva Brand Kit Exact Specs
+     ============================================================ */
+
+  /* TITLE — League Spartan 42px */
+  --title-font:      var(--font-display);
+  --title-size:      var(--text-title);    /* 42px */
+  --title-weight:    var(--weight-bold);
+  --title-leading:   var(--leading-tight);
+  --title-tracking:  var(--tracking-tight);
+
+  /* SUBTITLE — Gotham 36px */
+  --subtitle-font:   var(--font-body);
+  --subtitle-size:   var(--text-subtitle); /* 36px */
+  --subtitle-weight: var(--weight-bold);
+  --subtitle-leading: var(--leading-snug);
+
+  /* HEADING — Gotham Bold 31px */
+  --heading-font:    var(--font-body);
+  --heading-size:    var(--text-heading);  /* 31px */
+  --heading-weight:  var(--weight-bold);
+  --heading-leading: var(--leading-snug);
+
+  /* SUBHEADING — Gotham 18px */
+  --subheading-font:    var(--font-body);
+  --subheading-size:    var(--text-subhead); /* 18px */
+  --subheading-weight:  var(--weight-semibold);
+  --subheading-leading: var(--leading-normal);
+
+  /* SECTION HEADER — Gotham 20px */
+  --section-header-font:    var(--font-body);
+  --section-header-size:    var(--text-section); /* 20px */
+  --section-header-weight:  var(--weight-bold);
+  --section-header-tracking: var(--tracking-wide);
+  --section-header-transform: uppercase;
+
+  /* BODY — Gotham 12px */
+  --body-font:    var(--font-body);
+  --body-size:    var(--text-body);   /* 12px */
+  --body-weight:  var(--weight-regular);
+  --body-leading: var(--leading-normal);
+
+  /* QUOTE — Gotham 16px Italic */
+  --quote-font:    var(--font-body);
+  --quote-size:    var(--text-quote);  /* 16px */
+  --quote-weight:  var(--weight-regular);
+  --quote-style:   italic;
+  --quote-leading: var(--leading-relaxed);
+
+  /* CAPTION — Gotham 14px */
+  --caption-font:    var(--font-body);
+  --caption-size:    var(--text-caption); /* 14px */
+  --caption-weight:  var(--weight-regular);
+  --caption-leading: var(--leading-relaxed);
+}
+
+/* ============================================================
+   BASE ELEMENT STYLES — H.E.S. Canva Brand Kit
+   ============================================================ */
+
+.hes-title {
+  font-family: var(--title-font);
+  font-size: var(--title-size);        /* 42px — League Spartan */
+  font-weight: var(--title-weight);
+  line-height: var(--title-leading);
+  letter-spacing: var(--title-tracking);
+  color: var(--hes-white);
+}
+
+.hes-subtitle {
+  font-family: var(--subtitle-font);
+  font-size: var(--subtitle-size);     /* 36px — Gotham */
+  font-weight: var(--subtitle-weight);
+  line-height: var(--subtitle-leading);
+  color: var(--hes-yellow);
+}
+
+.hes-heading {
+  font-family: var(--heading-font);
+  font-size: var(--heading-size);      /* 31px — Gotham Bold */
+  font-weight: var(--heading-weight);
+  line-height: var(--heading-leading);
+  color: var(--hes-white);
+}
+
+.hes-subheading {
+  font-family: var(--subheading-font);
+  font-size: var(--subheading-size);   /* 18px — Gotham */
+  font-weight: var(--subheading-weight);
+  line-height: var(--subheading-leading);
+  color: var(--hes-yellow);
+}
+
+.hes-section-header {
+  font-family: var(--section-header-font);
+  font-size: var(--section-header-size); /* 20px — Gotham */
+  font-weight: var(--section-header-weight);
+  letter-spacing: var(--section-header-tracking);
+  text-transform: var(--section-header-transform);
+  color: var(--hes-yellow);
+}
+
+.hes-body {
+  font-family: var(--body-font);
+  font-size: var(--body-size);         /* 12px — Gotham */
+  font-weight: var(--body-weight);
+  line-height: var(--body-leading);
+  color: var(--hes-white);
+}
+
+.hes-quote {
+  font-family: var(--quote-font);
+  font-size: var(--quote-size);        /* 16px — Gotham Italic */
+  font-weight: var(--quote-weight);
+  font-style: var(--quote-style);
+  line-height: var(--quote-leading);
+  color: var(--hes-white);
+}
+
+.hes-caption {
+  font-family: var(--caption-font);
+  font-size: var(--caption-size);      /* 14px — Gotham */
+  font-weight: var(--caption-weight);
+  line-height: var(--caption-leading);
+  color: var(--hes-gray-light);
+}
+
+/* Legacy aliases for backwards compat */
+.hes-h1 { font-family: var(--title-font); font-size: var(--title-size); font-weight: var(--title-weight); line-height: var(--title-leading); color: var(--hes-white); }
+.hes-h2 { font-family: var(--heading-font); font-size: var(--heading-size); font-weight: var(--heading-weight); color: var(--hes-white); }
+.hes-h3 { font-family: var(--subheading-font); font-size: var(--subheading-size); font-weight: var(--subheading-weight); color: var(--hes-yellow); }
+.hes-small { font-family: var(--caption-font); font-size: var(--caption-size); color: var(--hes-gray-light); }
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+/* Backgrounds */
+.bg-blue    { background-color: var(--hes-blue); }
+.bg-navy    { background-color: var(--hes-blue-dark); }
+.bg-yellow  { background-color: var(--hes-yellow); }
+.bg-red     { background-color: var(--hes-red); }
+.bg-orange  { background-color: var(--hes-orange); }
+.bg-green   { background-color: var(--hes-green); }
+.bg-white   { background-color: var(--hes-white); }
+
+/* Photo ring treatment */
+.hes-photo-ring {
+  border-radius: var(--radius-circle);
+  border: var(--photo-ring-width) solid var(--photo-ring-color);
+  object-fit: cover;
+}
+
+/* Dot pattern (decorative corner element) */
+.hes-dot-pattern {
+  background-image: radial-gradient(circle, var(--hes-yellow) 1.5px, transparent 1.5px);
+  background-size: 10px 10px;
+  opacity: 0.5;
+}
+
+/* CTA Button */
+.hes-btn {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  background-color: var(--hes-red);
+  color: var(--hes-white);
+  padding: var(--space-3) var(--space-8);
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.hes-btn:hover  { background-color: var(--hes-red-dark); }
+
+.hes-btn-yellow {
+  background-color: var(--hes-yellow);
+  color: var(--hes-blue);
+}
+.hes-btn-yellow:hover { background-color: var(--hes-yellow-dark); }
+
+/* Pill callout box */
+.hes-callout {
+  background-color: var(--hes-red);
+  color: var(--hes-white);
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  border-radius: var(--radius-pill);
+  padding: var(--space-4) var(--space-8);
+}
+
+.hes-callout-yellow {
+  background-color: var(--hes-yellow);
+  color: var(--hes-blue);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4) var(--space-6);
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+}
+
+/* Yellow accent divider line */
+.hes-divider {
+  border: none;
+  border-top: 3px solid var(--hes-yellow);
+  margin: var(--space-4) 0;
+}

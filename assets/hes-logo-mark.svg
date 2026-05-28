@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84" width="84" height="84">
+  <rect x="0" y="0" width="84" height="84" rx="12" fill="#1A1F8F"></rect>
+  <text x="42" y="46" font-family="Arial Black, Impact, sans-serif" font-size="28" font-weight="900" fill="white" text-anchor="middle" letter-spacing="-1">H.E.S.</text>
+  <line x1="8" y1="52" x2="76" y2="52" stroke="white" stroke-width="1.5"></line>
+  <text x="42" y="64" font-family="Arial, sans-serif" font-size="6.5" font-weight="700" fill="white" text-anchor="middle" letter-spacing="0.3">YOUR Community Center</text>
+</svg>

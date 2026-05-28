@@ -4,7 +4,7 @@ const ShowAround = () => (
   <section className="relative bg-[color:var(--hes-blue)]" data-screen-label="Show Around">
     <div className="max-w-none grid lg:grid-cols-2">
       {/* Left: copy + buttons */}
-      <div className="px-8 lg:pl-[max(2rem,calc((100vw-1480px)/2+2rem))] py-20 lg:py-24 max-w-[680px] relative">
+      <div className="px-8 lg:pl-[max(2rem,calc((100vw-1480px)/2+2rem))] lg:pr-12 py-20 lg:py-24 relative">
         <div
           className="absolute top-0 right-0 w-[160px] h-[160px] opacity-20 pointer-events-none"
           style={{ backgroundImage: 'radial-gradient(circle, #F5C400 1.5px, transparent 1.6px)', backgroundSize: '14px 14px' }}

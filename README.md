@@ -1,6 +1,6 @@
 # H.E.S. Website — Vercel Deploy
 
-Static HTML site. No build step.nnn
+Static HTML site. No build step.
 
 ## Deploy
 

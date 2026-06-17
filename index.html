@@ -13,7 +13,7 @@
 <!-- H.E.S. design system tokens -->
 <link rel="stylesheet" href="assets/colors_and_type.css" />
 
-<!-- Tailwind CDN (will become Tailwind config in Astro project) -->
+<!-- Tailwind CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
@@ -40,7 +40,6 @@
 </script>
 
 <style>
-  /* ── Base ───────────────────────────────────────────────────── */
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; overflow-x: hidden; }
   body {
@@ -51,25 +50,16 @@
     -moz-osx-font-smoothing: grayscale;
   }
   .font-display { font-family: 'League Spartan', system-ui, sans-serif; }
-
-  /* ── Reveal on scroll ───────────────────────────────────────── */
   .reveal {
     opacity: 0;
     transform: translateY(24px);
     transition: opacity 0.7s ease-out, transform 0.7s ease-out;
   }
-  .reveal--in {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ── Tile pop-in keyframes ──────────────────────────────────── */
+  .reveal--in { opacity: 1; transform: translateY(0); }
   @keyframes tile-in {
     from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
-  /* ── Tweak-driven overrides (CSS attribute selectors) ──────── */
   html[data-tiles-per-row="3"] section#programs .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -78,58 +68,39 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
-
-  html[data-dots="0"] [style*="radial-gradient(circle, #F5C400"] {
-    display: none !important;
-  }
-
-  /* Hide impact cards block if tweak off — last grid in stats block */
-  html[data-impact="0"] [data-screen-label="Stats Block"] .relative.grid.md\:grid-cols-3:last-child {
-    display: none;
-  }
-
-  /* Hero accent word: yellow (default) vs white */
-  html[data-hero-accent="white"] [data-screen-label="Hero"] h1 span span {
-    color: #ffffff !important;
-  }
-
-  /* CTA style: filled (default blue) vs yellow chip */
-  html[data-cta-style="yellow"] a.bg-\[color\:var\(--hes-blue\)\] {
-    background-color: var(--hes-yellow) !important;
-    color: var(--hes-blue) !important;
-  }
-  html[data-cta-style="yellow"] a.bg-\[color\:var\(--hes-blue\)\]:hover {
-    background-color: #ffffff !important;
-  }
-
-  /* Focus styles */
+  html[data-dots="0"] [style*="radial-gradient(circle, #F5C400"] { display: none !important; }
+  html[data-impact="0"] [data-screen-label="Stats Block"] .relative.grid.md\:grid-cols-3:last-child { display: none; }
+  html[data-hero-accent="white"] [data-screen-label="Hero"] h1 span span { color: #ffffff !important; }
+  html[data-cta-style="yellow"] a.bg-\[color\:var\(--hes-blue\)\] { background-color: var(--hes-yellow) !important; color: var(--hes-blue) !important; }
+  html[data-cta-style="yellow"] a.bg-\[color\:var\(--hes-blue\)\]:hover { background-color: #ffffff !important; }
   :focus-visible { outline: 2px solid var(--hes-yellow); outline-offset: 2px; }
-
-  /* Smooth scroll */
   html { scroll-behavior: smooth; }
-
-  /* ── Global rounded corners ─────────────────────────────────── */
-  /* Cards, panels, photo wrappers with shadows */
   [class~="shadow-sm"]  { border-radius: 8px  !important; }
   [class~="shadow-md"]  { border-radius: 10px !important; }
   [class~="shadow-lg"]  { border-radius: 12px !important; }
   [class~="shadow-xl"]  { border-radius: 14px !important; }
   [class~="shadow-2xl"] { border-radius: 16px !important; }
-  /* Photo+overflow containers inherit their parent's radius */
   [class~="shadow-lg"][class~="overflow-hidden"],
   [class~="shadow-xl"][class~="overflow-hidden"],
   [class~="shadow-md"][class~="overflow-hidden"] { overflow: hidden !important; }
-  /* CTA buttons and links */
   a.inline-flex, button.inline-flex { border-radius: 8px !important; }
-  /* Search / text inputs */
   input { border-radius: 8px !important; }
-  /* Mega-menu drawer — keep sharp (full-width overlay) */
-  [class~="shadow-\[0_24px_40px"] { border-radius: 0 !important; }
+  [class~="shadow-[0_24px_40px"] { border-radius: 0 !important; }
 </style>
 </head>
 <body>
 
 <div id="root"></div>
+
+<!-- ① Google Sheets live data — same sheet as the kiosk, updates every 20s -->
+<script>
+  window.HES_SHEETS_CONFIG = {
+    apiKey:        "AIzaSyA-EYHPecSeorQRHynRdgH4Rtc5VlPajqc",
+    spreadsheetId: "1XRxSFwJfSjL-wLkSl4FGWYX9pocUe7HnW2LsE5fuHO4",
+    pollSeconds:   20,
+  };
+</script>
+<script src="sheets.js"></script>
 
 <!-- React -->
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
@@ -139,8 +110,10 @@
 <!-- Tweaks panel scaffold -->
 <script type="text/babel" src="tweaks-panel.jsx"></script>
 
-<!-- App in order: data → header → hero → tiles+info → numbers+news+events → cta+footer → app -->
+<!-- App: data → live bridge → components → app -->
 <script type="text/babel" src="components/data.jsx"></script>
+<!-- ② Live Sheets bridge — patches data arrays within 20s of any Sheet edit -->
+<script type="text/babel" src="live-sheets.jsx"></script>
 <script type="text/babel" src="components/header.jsx"></script>
 <script type="text/babel" src="components/hero.jsx"></script>
 <script type="text/babel" src="components/tiles-and-info.jsx"></script>

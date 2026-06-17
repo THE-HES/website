@@ -10,7 +10,6 @@ const HOMEPAGE_TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 
 // Reveal-on-scroll observer (IntersectionObserver)
 function useReveal() {
-  useLiveContent();   // ← live Google Sheets sync
   useEffect(() => {
     const els = document.querySelectorAll('.reveal');
     const io = new IntersectionObserver((entries) => {
@@ -66,6 +65,7 @@ const HomepageTweaks = ({ t, setTweak }) => (
 const App = () => {
   const [t, setTweak] = useTweaks(HOMEPAGE_TWEAK_DEFAULTS);
   useReveal();
+  useLiveContent();   // ← live Google Sheets sync (every 20s)
 
   // Surface tweak state on <html> so CSS can react via attribute selectors
   useEffect(() => {

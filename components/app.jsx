@@ -10,6 +10,7 @@ const HOMEPAGE_TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 
 // Reveal-on-scroll observer (IntersectionObserver)
 function useReveal() {
+  useLiveContent();   // ← live Google Sheets sync
   useEffect(() => {
     const els = document.querySelectorAll('.reveal');
     const io = new IntersectionObserver((entries) => {

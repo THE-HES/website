@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>H.E.S. HeroSlides Tab Setup</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f4f6fb;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+    max-width: 680px;
+    width: 100%;
+    padding: 48px;
+  }
+  .logo {
+    width: 56px; height: 56px;
+    background: #1A1F8F;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    font-weight: 900; font-size: 18px; color: #F5C400;
+    letter-spacing: -1px;
+  }
+  h1 { font-size: 26px; font-weight: 800; color: #1A1F8F; margin-bottom: 8px; }
+  .sub { color: #666; font-size: 15px; margin-bottom: 32px; line-height: 1.5; }
+  .steps { counter-reset: step; list-style: none; margin-bottom: 32px; }
+  .steps li {
+    counter-increment: step;
+    display: flex; gap: 16px; align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .steps li::before {
+    content: counter(step);
+    min-width: 32px; height: 32px;
+    background: #1A1F8F; color: #F5C400;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px; flex-shrink: 0; margin-top: 1px;
+  }
+  .steps li p { font-size: 15px; color: #333; line-height: 1.6; padding-top: 5px; }
+  .steps li p strong { color: #1A1F8F; }
+  .steps li p code {
+    background: #f0f2ff; color: #1A1F8F;
+    padding: 2px 7px; border-radius: 5px; font-size: 13px; font-weight: 700;
+  }
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%;
+    background: #1A1F8F;
+    color: white;
+    border: none; border-radius: 12px;
+    padding: 18px 24px;
+    font-size: 17px; font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    text-decoration: none;
+    margin-bottom: 16px;
+  }
+  .btn:hover { background: #14187a; }
+  .btn:active { transform: scale(0.98); }
+  .btn svg { flex-shrink: 0; }
+  .note {
+    background: #fffbe6; border: 1.5px solid #F5C400;
+    border-radius: 10px; padding: 16px 20px;
+    font-size: 13px; color: #555; line-height: 1.6; margin-top: 24px;
+  }
+  .note strong { color: #1A1F8F; }
+  .success {
+    display: none;
+    background: #e8f5e9; border: 1.5px solid #2AAB47;
+    border-radius: 10px; padding: 14px 18px;
+    font-size: 14px; color: #1a5e2a; margin-top: 12px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">H.E.S.</div>
+  <h1>HeroSlides Tab Setup</h1>
+  <p class="sub">Download a pre-filled CSV and import it into your Google Sheet as the <strong>HeroSlides</strong> tab — takes about 30 seconds.</p>
+
+  <ol class="steps">
+    <li><p>Click <strong>Download HeroSlides CSV</strong> below.</p></li>
+    <li><p>Open your <strong>Google Sheet</strong> (the H.E.S. master sheet).</p></li>
+    <li><p>Click the <strong>+</strong> button at the bottom to add a new tab. Name it exactly <code>HeroSlides</code>.</p></li>
+    <li><p>With the new tab selected, go to <strong>File → Import</strong>, click <strong>Upload</strong>, and drag the downloaded CSV onto the upload area.</p></li>
+    <li><p>In the import dialog: set <strong>Import location</strong> to <code>Replace current sheet</code> and <strong>Separator type</strong> to <code>Comma</code>. Click <strong>Import data</strong>.</p></li>
+    <li><p>Done! Your slides are live. Edit any row, add new ones, or set an <strong>Expiry Date</strong> using the date picker in column J.</p></li>
+  </ol>
+
+  <button class="btn" onclick="downloadCSV()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download HeroSlides CSV
+  </button>
+  <div class="success" id="success">✅ CSV downloaded! Follow the steps above to import it.</div>
+
+  <div class="note">
+    <strong>Column guide:</strong><br>
+    <strong>Active</strong> = yes / no — toggle a slide on/off instantly<br>
+    <strong>Theme</strong> = use <code>|</code> to split lines: <em>"Summer Camp | 2026 is | now open."</em> — line 2 is always yellow<br>
+    <strong>Expiry Date</strong> = click any cell in column J and use Google Sheets' date picker — the slide auto-hides the day after<br>
+    <strong>Image URL</strong> = leave blank to use the built-in H.E.S. photos for Camp / Fair slides
+  </div>
+</div>
+
+<script>
+function downloadCSV() {
+  const rows = [
+    // Header row
+    ['Active','Theme','Eyebrow','Body','Image URL','Primary Button','Primary URL','Secondary Button','Secondary URL','Expiry Date'],
+    // Slide 1 — Community / evergreen
+    [
+      'yes',
+      'A century of | neighbors | helping neighbors.',
+      'YOUR Community Center · Brooklyn, NY',
+      'From early childhood through senior services — H.E.S. has been Brooklyn\'s community anchor for over 100 years.',
+      '',
+      'Explore Programs',
+      '#programs',
+      'About H.E.S.',
+      '#',
+      ''
+    ],
+    // Slide 2 — Summer Camp
+    [
+      'yes',
+      'Summer Camp | 2026 is | now open.',
+      'Registration Open · Limited Spots',
+      'June 29 – August 19. Swim, arts, karate, STEM, day & overnight trips. Camp Xtra supports children with disabilities.',
+      '',
+      'Register Now',
+      '#camp',
+      'Camp Activities',
+      '#camp-activities',
+      '8/19/2026'
+    ],
+    // Slide 3 — placeholder for next event
+    [
+      'no',
+      'Your Next Event | Title Goes | Here',
+      'Date · Location',
+      'Describe the event in one sentence.',
+      '',
+      'Learn More',
+      '#',
+      '',
+      '',
+      ''
+    ],
+  ];
+
+  const csv = rows.map(row =>
+    row.map(cell => '"' + String(cell).replace(/"/g, '""') + '"').join(',')
+  ).join('\r\n');
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'HeroSlides.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  document.getElementById('success').style.display = 'block';
+}
+</script>
+</body>
+</html>

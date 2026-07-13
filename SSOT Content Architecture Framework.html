@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>H.E.S. SSOT Content Architecture Framework</title>
+  <link rel="stylesheet" href="_ds/h-e-s-design-system-019dd9e4-ce75-7e75-9c1f-7b630bf7afbf/colors_and_type.css">
+  <style>
+    doc-page:not(:defined) { visibility: hidden; }
+
+    doc-page {
+      --doc-font: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+      font-family: var(--doc-font);
+      font-size: 13px;
+      line-height: 1.65;
+      color: #111;
+    }
+
+    /* ── Cover band ── */
+    .cover {
+      background: var(--hes-blue);
+      color: var(--hes-white);
+      padding: 2rem 2.5rem 1.6rem;
+      margin: -0.75in -0.75in 2rem;
+      border-bottom: 6px solid var(--hes-yellow);
+    }
+    .cover-eyebrow {
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--hes-yellow);
+      margin-bottom: 0.4rem;
+    }
+    .cover h1 {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--hes-white);
+      margin: 0 0 0.5rem;
+    }
+    .cover-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+      margin: 0;
+    }
+    .cover-meta {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+    }
+    .cover-meta strong { color: var(--hes-yellow); }
+
+    /* ── Section headers ── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--hes-blue);
+      color: var(--hes-white);
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.45rem 0.75rem;
+      border-radius: 4px;
+      margin: 2rem 0 0.9rem;
+      break-after: avoid;
+    }
+    .section-label .num {
+      background: var(--hes-yellow);
+      color: var(--hes-blue);
+      font-size: 10px;
+      font-weight: 900;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    h2 {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--hes-blue);
+      margin: 1.4rem 0 0.4rem;
+      break-after: avoid;
+    }
+    h3 {
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--hes-blue-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 1.1rem 0 0.3rem;
+      break-after: avoid;
+    }
+    p { margin: 0 0 0.6rem; }
+    ul, ol { margin: 0.3rem 0 0.7rem 1.2rem; padding: 0; }
+    li { margin-bottom: 0.25rem; }
+
+    /* ── Tables ── */
+    .tbl-wrap { overflow-x: auto; margin: 0.6rem 0 1rem; break-inside: avoid; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+      line-height: 1.4;
+    }
+    thead tr {
+      background: var(--hes-blue);
+      color: var(--hes-white);
+    }
+    thead th {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.45rem 0.5rem;
+      text-align: left;
+      border: 1px solid rgba(255,255,255,0.15);
+      white-space: nowrap;
+    }
+    tbody tr:nth-child(even) { background: #f4f5fb; }
+    tbody tr:nth-child(odd)  { background: #fff; }
+    tbody td {
+      padding: 0.4rem 0.5rem;
+      border: 1px solid #dde;
+      vertical-align: top;
+    }
+    .td-key {
+      font-family: 'Courier New', monospace;
+      font-size: 10.5px;
+      color: #1A1F8F;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .td-type {
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      color: #666;
+      white-space: nowrap;
+    }
+    .td-req {
+      font-weight: 700;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+    .req-y { color: var(--hes-red); }
+    .req-n { color: var(--hes-gray); }
+
+    /* ── Example row highlight ── */
+    .example-row td {
+      background: #fffbe6 !important;
+      border-color: var(--hes-yellow) !important;
+    }
+
+    /* ── Code / pseudocode ── */
+    pre {
+      background: #0f1240;
+      color: #e8e8ff;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      padding: 0.9rem 1rem;
+      border-radius: 6px;
+      border-left: 4px solid var(--hes-yellow);
+      margin: 0.5rem 0 1rem;
+      white-space: pre;
+      overflow-x: auto;
+      break-inside: avoid;
+    }
+    .kw  { color: #7dd3fc; }  /* keywords */
+    .fn  { color: #86efac; }  /* functions */
+    .str { color: #fde68a; }  /* strings / values */
+    .cm  { color: #6b7280; font-style: italic; }  /* comments */
+    .op  { color: #f9a8d4; }  /* operators */
+
+    /* ── Callout boxes ── */
+    .callout {
+      border-left: 4px solid var(--hes-yellow);
+      background: #fffbe6;
+      padding: 0.6rem 0.8rem;
+      border-radius: 0 4px 4px 0;
+      margin: 0.5rem 0 0.8rem;
+      font-size: 12px;
+      break-inside: avoid;
+    }
+    .callout-red {
+      border-color: var(--hes-red);
+      background: #fff5f5;
+    }
+    .callout-blue {
+      border-color: var(--hes-blue);
+      background: #f0f1fb;
+    }
+    .callout strong { display: block; margin-bottom: 0.2rem; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; }
+
+    /* ── Group pills ── */
+    .group-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin: 0.6rem 0 1rem;
+    }
+    .group-pill {
+      background: var(--hes-blue);
+      color: var(--hes-white);
+      border-radius: 6px;
+      padding: 0.5rem 0.65rem;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .group-pill span {
+      display: block;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--hes-yellow);
+      margin-bottom: 0.15rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ── Edge case cards ── */
+    .edge-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin: 0.6rem 0 1rem;
+    }
+    .edge-card {
+      border: 1px solid #dde;
+      border-radius: 6px;
+      padding: 0.6rem 0.75rem;
+      break-inside: avoid;
+    }
+    .edge-card .edge-title {
+      font-weight: 700;
+      font-size: 11.5px;
+      color: var(--hes-blue);
+      margin-bottom: 0.25rem;
+    }
+    .edge-card .edge-risk {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 1px 6px;
+      border-radius: 3px;
+      float: right;
+      margin-top: 1px;
+    }
+    .risk-high { background: #fee2e2; color: var(--hes-red); }
+    .risk-med  { background: #fff3cd; color: #b45309; }
+    .risk-low  { background: #dcfce7; color: #166534; }
+
+    /* ── TOC ── */
+    .toc { background: #f4f5fb; border-radius: 6px; padding: 0.8rem 1rem; margin-bottom: 1.5rem; break-inside: avoid; }
+    .toc-title { font-weight: 700; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hes-blue); margin-bottom: 0.5rem; }
+    .toc ol { margin: 0; padding-left: 1.2rem; }
+    .toc li { font-size: 12px; margin-bottom: 0.2rem; color: var(--hes-blue); }
+    .toc li .toc-sub { font-weight: 400; color: #555; font-size: 11px; margin-left: 0.5rem; }
+
+    /* ── Footer ── */
+    .doc-footer {
+      margin-top: 2.5rem;
+      padding-top: 0.75rem;
+      border-top: 2px solid var(--hes-yellow);
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #888;
+    }
+    .doc-footer strong { color: var(--hes-blue); }
+
+    hr.yellow { border: none; border-top: 2px solid var(--hes-yellow); margin: 1.2rem 0; }
+    .mono { font-family: 'Courier New', monospace; font-size: 11px; background: #eef; padding: 1px 4px; border-radius: 3px; color: var(--hes-blue); }
+  </style>
+</head>
+<body>
+  <style>doc-page:not(:defined){visibility:hidden}</style>
+
+  <doc-page size="letter" margin="0.75in">
+
+    <!-- COVER -->
+    <div class="cover">
+      <div class="cover-eyebrow">Hebrew Educational Society · AI Brand Brain Initiative</div>
+      <h1>SSOT Content Architecture<br>Framework & Schema</h1>
+      <p class="cover-sub">Single Source of Truth Master Sheet — Content Audit, Schema Design &amp; Expiration Date Logic</p>
+      <div class="cover-meta">
+        <div><strong>Role:</strong> Senior Solutions Architect &amp; Enterprise Content Strategist</div>
+        <div><strong>Channels:</strong> Website · Kiosk · Flyer Creation Tool</div>
+        <div><strong>Version:</strong> 1.0 · July 2026</div>
+      </div>
+    </div>
+
+    <!-- TOC -->
+    <div class="toc">
+      <div class="toc-title">Contents</div>
+      <ol>
+        <li><strong>Task 1 — Content Audit Framework &amp; Schema Design</strong>
+          <span class="toc-sub">Schema columns · Content group taxonomy · Example rows</span>
+        </li>
+        <li><strong>Task 2 — Expiration Date &amp; Content Disabling Logic</strong>
+          <span class="toc-sub">Scheduling metadata · Render-time pseudocode · Edge cases</span>
+        </li>
+      </ol>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <div class="section-label"><span class="num">1</span> Task 1 — Content Audit Framework &amp; Schema Design</div>
+
+    <p>Every text element rendered on any H.E.S. channel maps to exactly one row in the Master Sheet. No front-end should hard-code copy. The schema below is the contract between the Content team and Engineering.</p>
+
+    <!-- 1A: Schema -->
+    <h2>1A. Master Sheet Schema — Full Column Definition</h2>
+    <p>16 columns. <span style="color:var(--hes-red);font-weight:700;">R</span> = Required. <span style="color:var(--hes-gray);font-weight:700;">O</span> = Optional.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Column Name</th>
+            <th>Type</th>
+            <th>R/O</th>
+            <th>Description &amp; Rules</th>
+            <th>Example Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td class="td-key">content_id</td>
+            <td class="td-type">String (UUID)</td>
+            <td class="td-req req-y">R</td>
+            <td>Globally unique key. Format: <span class="mono">CHANNEL_PAGE_COMPONENT_SLOT</span>. Never reuse. Never rename once live.</td>
+            <td class="td-key">WEB_HOME_HERO_HEADLINE</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td class="td-key">channel</td>
+            <td class="td-type">Enum</td>
+            <td class="td-req req-y">R</td>
+            <td>Delivery channel. Values: <span class="mono">WEB</span> · <span class="mono">KIOSK</span> · <span class="mono">FLYER</span> · <span class="mono">GLOBAL</span> (shared across all).</td>
+            <td>WEB</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td class="td-key">page_screen</td>
+            <td class="td-type">String</td>
+            <td class="td-req req-y">R</td>
+            <td>Page or screen slug. Matches URL path or kiosk screen ID. Use <span class="mono">_global</span> for nav, footer, etc.</td>
+            <td>homepage</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td class="td-key">component</td>
+            <td class="td-type">String</td>
+            <td class="td-req req-y">R</td>
+            <td>UI component or content block. Matches a named component in codebase (e.g. <span class="mono">HeroSlider</span>, <span class="mono">ProgramCard</span>, <span class="mono">NavBar</span>).</td>
+            <td>HeroSlider</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td class="td-key">slot</td>
+            <td class="td-type">String</td>
+            <td class="td-req req-y">R</td>
+            <td>Named slot within the component. Engineers define slot names in code. Values: <span class="mono">headline</span> · <span class="mono">subheadline</span> · <span class="mono">body</span> · <span class="mono">cta_label</span> · <span class="mono">cta_url</span> · <span class="mono">alt_text</span> · <span class="mono">aria_label</span> etc.</td>
+            <td>headline</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td class="td-key">content_group</td>
+            <td class="td-type">Enum</td>
+            <td class="td-req req-y">R</td>
+            <td>Logical category for filtering. See §1B for full taxonomy.</td>
+            <td>HERO</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td class="td-key">default_copy</td>
+            <td class="td-type">String</td>
+            <td class="td-req req-y">R</td>
+            <td>The live, production copy. This is what the channel renders. Markdown allowed only if channel supports it — flag in <span class="mono">notes</span> if so.</td>
+            <td>YOUR Community Center — Brooklyn's Best Since 1899</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td class="td-key">char_limit</td>
+            <td class="td-type">Integer</td>
+            <td class="td-req req-y">R</td>
+            <td>Max character count enforced by the CMS UI. Set per slot based on design constraints. Null = no limit. Sheet should warn when <span class="mono">default_copy</span> exceeds this.</td>
+            <td>80</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td class="td-key">variation_a / variation_b</td>
+            <td class="td-type">String</td>
+            <td class="td-req req-n">O</td>
+            <td>A/B test or seasonal alternate copy. Channel reads these only when its feature flag for that test is active. Null = use <span class="mono">default_copy</span>.</td>
+            <td>Join Brooklyn's Community Hub</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td class="td-key">channel_override_kiosk</td>
+            <td class="td-type">String</td>
+            <td class="td-req req-n">O</td>
+            <td>Channel-specific copy override. If populated, Kiosk ignores <span class="mono">default_copy</span> and uses this value. Same pattern for <span class="mono">channel_override_flyer</span>. Null = inherit default.</td>
+            <td>Welcome! Touch to Begin.</td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td class="td-key">status</td>
+            <td class="td-type">Enum</td>
+            <td class="td-req req-y">R</td>
+            <td>Current state. Values: <span class="mono">ACTIVE</span> · <span class="mono">DRAFT</span> · <span class="mono">SCHEDULED</span> · <span class="mono">EXPIRED</span> · <span class="mono">DISABLED</span>. Channels must refuse to render anything that is not <span class="mono">ACTIVE</span>.</td>
+            <td>ACTIVE</td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td class="td-key">publish_date</td>
+            <td class="td-type">ISO 8601 DateTime</td>
+            <td class="td-req req-n">O</td>
+            <td>UTC datetime when content becomes renderable. Null = render immediately once status = ACTIVE.</td>
+            <td>2026-06-29T09:00:00Z</td>
+          </tr>
+          <tr>
+            <td>13</td>
+            <td class="td-key">expiry_date</td>
+            <td class="td-type">ISO 8601 DateTime</td>
+            <td class="td-req req-n">O</td>
+            <td>UTC datetime after which content must not render. Null = never expires. See §2 for full evaluation logic.</td>
+            <td>2026-08-19T23:59:59Z</td>
+          </tr>
+          <tr>
+            <td>14</td>
+            <td class="td-key">fallback_content_id</td>
+            <td class="td-type">String (FK)</td>
+            <td class="td-req req-n">O</td>
+            <td>Points to another <span class="mono">content_id</span> to display if this row is expired/disabled. Must itself be ACTIVE. Prevents blank slots. Null = hide the component entirely.</td>
+            <td>WEB_HOME_HERO_HEADLINE_FALLBACK</td>
+          </tr>
+          <tr>
+            <td>15</td>
+            <td class="td-key">last_edited_by</td>
+            <td class="td-type">String (email)</td>
+            <td class="td-req req-y">R</td>
+            <td>Email of last editor. Sheet auto-populates via Google Sheets / Airtable audit log. Non-editable by hand.</td>
+            <td>jsmith@thehes.org</td>
+          </tr>
+          <tr>
+            <td>16</td>
+            <td class="td-key">notes</td>
+            <td class="td-type">String</td>
+            <td class="td-req req-n">O</td>
+            <td>Context for editors and engineers. E.g. "Markdown supported here" / "Tied to Summer Camp registration window" / "Do not exceed 2 lines at 1440px viewport".</td>
+            <td>Tied to Summer Camp dates. Auto-expire Aug 19.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 1B: Content Group Taxonomy -->
+    <h2>1B. Content Group Taxonomy</h2>
+    <p>Seven logical groups cover every text element on the H.E.S. site. Each group maps to a filtered view (tab) in the Master Sheet.</p>
+
+    <div class="group-grid">
+      <div class="group-pill"><span>Group 1</span>GLOBAL</div>
+      <div class="group-pill"><span>Group 2</span>HERO</div>
+      <div class="group-pill"><span>Group 3</span>NAV</div>
+      <div class="group-pill"><span>Group 4</span>PROGRAM</div>
+      <div class="group-pill"><span>Group 5</span>MICROCOPY</div>
+      <div class="group-pill"><span>Group 6</span>STRUCTURAL</div>
+      <div class="group-pill"><span>Group 7</span>EVENT</div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Group</th>
+            <th>What It Contains</th>
+            <th>Example Slots</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>GLOBAL</strong></td>
+            <td>Elements shared across all pages/screens</td>
+            <td>Site name, tagline, address, phone, footer legal text</td>
+            <td>Channel = <span class="mono">GLOBAL</span>. Change once, propagates everywhere.</td>
+          </tr>
+          <tr>
+            <td><strong>NAV</strong></td>
+            <td>Navigation labels, ARIA labels, mobile menu copy</td>
+            <td>Nav item labels, "Skip to content", hamburger aria-label</td>
+            <td>Include both visible label and aria-label as separate slots.</td>
+          </tr>
+          <tr>
+            <td><strong>HERO</strong></td>
+            <td>Full-bleed hero sections, carousels, splash screens</td>
+            <td>headline, subheadline, cta_label, cta_url, slide_count</td>
+            <td>Each hero slide is a separate set of rows with a shared slide_index field.</td>
+          </tr>
+          <tr>
+            <td><strong>PROGRAM</strong></td>
+            <td>Program/service cards, detail pages, descriptions</td>
+            <td>program_name, tagline, body, age_range, price, cta_label</td>
+            <td>These rows also carry scheduling metadata (Summer Camp, etc.).</td>
+          </tr>
+          <tr>
+            <td><strong>EVENT</strong></td>
+            <td>Time-bound events, announcements, banners</td>
+            <td>event_title, date_display, location, description, cta_label</td>
+            <td>Always set expiry_date. Always set fallback_content_id.</td>
+          </tr>
+          <tr>
+            <td><strong>MICROCOPY</strong></td>
+            <td>UI copy: buttons, form labels, error messages, tooltips, empty states</td>
+            <td>cta_label, placeholder_text, error_required, success_message</td>
+            <td>Strictest char limits. Never varies by season. Change rarely.</td>
+          </tr>
+          <tr>
+            <td><strong>STRUCTURAL</strong></td>
+            <td>SEO/meta tags, page titles, Open Graph, JSON-LD data fields</td>
+            <td>page_title, meta_description, og_title, og_description, schema_name</td>
+            <td>Never rendered visibly but must be in sheet. Channel = WEB only.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 1C: Example Rows -->
+    <h2>1C. Example Rows — What a Row Looks Like in Practice</h2>
+
+    <div class="callout callout-blue">
+      <strong>Reading these rows</strong>
+      Three example rows below: a hero headline, a CTA button, and an event announcement. The yellow-highlighted row is the CTA — showing how a button's label and URL are separate rows sharing the same component but different slots.
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>content_id</th>
+            <th>channel</th>
+            <th>page_screen</th>
+            <th>component</th>
+            <th>slot</th>
+            <th>group</th>
+            <th>default_copy</th>
+            <th>char_limit</th>
+            <th>status</th>
+            <th>expiry_date</th>
+            <th>fallback_id</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-key">WEB_HOME_HERO_HEADLINE</td>
+            <td>WEB</td>
+            <td>homepage</td>
+            <td>HeroSlider</td>
+            <td>headline</td>
+            <td>HERO</td>
+            <td><em>YOUR Community Center — Brooklyn's Best Since 1899</em></td>
+            <td>80</td>
+            <td>ACTIVE</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr class="example-row">
+            <td class="td-key">WEB_HOME_HERO_CTA_LABEL</td>
+            <td>WEB</td>
+            <td>homepage</td>
+            <td>HeroSlider</td>
+            <td>cta_label</td>
+            <td>HERO</td>
+            <td><em>Register Now</em></td>
+            <td>24</td>
+            <td>ACTIVE</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr class="example-row">
+            <td class="td-key">WEB_HOME_HERO_CTA_URL</td>
+            <td>WEB</td>
+            <td>homepage</td>
+            <td>HeroSlider</td>
+            <td>cta_url</td>
+            <td>HERO</td>
+            <td><em>/summer-camp/register</em></td>
+            <td>—</td>
+            <td>ACTIVE</td>
+            <td>2026-08-19T23:59:59Z</td>
+            <td>WEB_HOME_HERO_CTA_URL_DEFAULT</td>
+          </tr>
+          <tr>
+            <td class="td-key">WEB_HOME_BANNER_STREETFAIR</td>
+            <td>WEB</td>
+            <td>homepage</td>
+            <td>AnnouncementBanner</td>
+            <td>headline</td>
+            <td>EVENT</td>
+            <td><em>Annual Street Fair — June 7, Free Admission!</em></td>
+            <td>72</td>
+            <td>EXPIRED</td>
+            <td>2026-06-07T23:59:59Z</td>
+            <td>WEB_HOME_BANNER_SUMMERCAMP</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="yellow">
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <div class="section-label"><span class="num">2</span> Task 2 — Expiration Date &amp; Content Disabling Logic</div>
+
+    <!-- 2A: Metadata Columns -->
+    <h2>2A. Scheduling Metadata Columns</h2>
+    <p>These six columns, added to the Master Sheet, give the content team full control over the lifecycle of any row without requiring an engineering deploy.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Column</th>
+            <th>Type</th>
+            <th>R/O</th>
+            <th>Purpose</th>
+            <th>Accepted Values / Format</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-key">publish_date</td>
+            <td class="td-type">ISO 8601 UTC</td>
+            <td class="td-req req-n">O</td>
+            <td>Earliest datetime channel may render this row</td>
+            <td><span class="mono">2026-06-29T09:00:00Z</span> · Null = render immediately</td>
+          </tr>
+          <tr>
+            <td class="td-key">expiry_date</td>
+            <td class="td-type">ISO 8601 UTC</td>
+            <td class="td-req req-n">O</td>
+            <td>Datetime after which channel must not render this row</td>
+            <td><span class="mono">2026-08-19T23:59:59Z</span> · Null = never expires</td>
+          </tr>
+          <tr>
+            <td class="td-key">timezone_ref</td>
+            <td class="td-type">IANA TZ String</td>
+            <td class="td-req req-n">O</td>
+            <td>The local timezone used when <em>displaying</em> date/time values in copy (e.g. "9:00 AM ET"). Does NOT affect expiry evaluation — that is always UTC.</td>
+            <td><span class="mono">America/New_York</span></td>
+          </tr>
+          <tr>
+            <td class="td-key">status</td>
+            <td class="td-type">Enum</td>
+            <td class="td-req req-y">R</td>
+            <td>Manual status override. Takes precedence over date logic. Use to emergency-disable content regardless of schedule.</td>
+            <td><span class="mono">ACTIVE</span> · <span class="mono">DRAFT</span> · <span class="mono">SCHEDULED</span> · <span class="mono">EXPIRED</span> · <span class="mono">DISABLED</span></td>
+          </tr>
+          <tr>
+            <td class="td-key">fallback_content_id</td>
+            <td class="td-type">String (FK)</td>
+            <td class="td-req req-n">O</td>
+            <td>Content row to render when this row is not renderable. Must be ACTIVE. Prevents blank component slots.</td>
+            <td>Any valid <span class="mono">content_id</span> · Null = hide component</td>
+          </tr>
+          <tr>
+            <td class="td-key">cache_ttl_seconds</td>
+            <td class="td-type">Integer</td>
+            <td class="td-req req-n">O</td>
+            <td>Hint to the API/CDN layer for how long this row may be cached. Set low (60–300s) for time-sensitive EVENT rows; higher for MICROCOPY.</td>
+            <td><span class="mono">60</span> · <span class="mono">300</span> · <span class="mono">86400</span> · Null = use channel default</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 2B: Evaluation Logic -->
+    <h2>2B. Render-Time Evaluation Logic (Pseudocode)</h2>
+
+    <p>Every channel runs this decision tree when it fetches a content row. Evaluate in order — first failing condition wins.</p>
+
+    <pre><span class="cm">// ─────────────────────────────────────────────────────────────
+// FUNCTION: isRenderable(row, requestTimestampUTC)
+// Called by: Web renderer, Kiosk app, Flyer tool
+// Returns: { render: bool, copy: string | null }
+// ─────────────────────────────────────────────────────────────</span>
+
+<span class="kw">function</span> <span class="fn">isRenderable</span>(row, now) {
+
+  <span class="cm">// STEP 1: Manual status override (highest priority)</span>
+  <span class="kw">if</span> (row.status === <span class="str">"DISABLED"</span> || row.status === <span class="str">"DRAFT"</span>) {
+    <span class="kw">return</span> <span class="fn">resolveToFallback</span>(row, now);
+  }
+
+  <span class="cm">// STEP 2: Null / missing default_copy guard</span>
+  <span class="kw">if</span> (!row.default_copy || row.default_copy.trim() === <span class="str">""</span>) {
+    <span class="fn">logWarning</span>(<span class="str">`content_id ${row.content_id} has empty default_copy`</span>);
+    <span class="kw">return</span> <span class="fn">resolveToFallback</span>(row, now);
+  }
+
+  <span class="cm">// STEP 3: publish_date — not yet live</span>
+  <span class="kw">if</span> (row.publish_date && now <span class="op">&lt;</span> <span class="fn">toUTC</span>(row.publish_date)) {
+    <span class="kw">return</span> <span class="fn">resolveToFallback</span>(row, now);
+  }
+
+  <span class="cm">// STEP 4: expiry_date — window has closed</span>
+  <span class="kw">if</span> (row.expiry_date && now <span class="op">&gt;=</span> <span class="fn">toUTC</span>(row.expiry_date)) {
+    <span class="fn">autoSetStatus</span>(row, <span class="str">"EXPIRED"</span>);  <span class="cm">// Write back to sheet via API</span>
+    <span class="kw">return</span> <span class="fn">resolveToFallback</span>(row, now);
+  }
+
+  <span class="cm">// STEP 5: Passed all checks — content is live</span>
+  <span class="kw">const</span> copy = <span class="fn">resolveChannelCopy</span>(row);  <span class="cm">// channel_override > default_copy</span>
+  <span class="kw">return</span> { render: <span class="kw">true</span>, copy };
+}
+
+<span class="cm">// ─────────────────────────────────────────────────────────────
+// HELPER: resolveToFallback
+// ─────────────────────────────────────────────────────────────</span>
+
+<span class="kw">function</span> <span class="fn">resolveToFallback</span>(row, now) {
+  <span class="kw">if</span> (!row.fallback_content_id) {
+    <span class="kw">return</span> { render: <span class="kw">false</span>, copy: <span class="kw">null</span> }; <span class="cm">// Component hides itself</span>
+  }
+
+  <span class="kw">const</span> fallback = <span class="fn">fetchRow</span>(row.fallback_content_id);
+
+  <span class="cm">// Prevent infinite fallback chain (max depth: 2)</span>
+  <span class="kw">if</span> (!fallback || fallback.fallback_content_id === row.content_id) {
+    <span class="fn">logError</span>(<span class="str">`Circular fallback on ${row.content_id}`</span>);
+    <span class="kw">return</span> { render: <span class="kw">false</span>, copy: <span class="kw">null</span> };
+  }
+
+  <span class="kw">return</span> <span class="fn">isRenderable</span>(fallback, now); <span class="cm">// Recurse once</span>
+}
+
+<span class="cm">// ─────────────────────────────────────────────────────────────
+// HELPER: resolveChannelCopy
+// Priority: channel_override_[channel] > A/B variation > default_copy
+// ─────────────────────────────────────────────────────────────</span>
+
+<span class="kw">function</span> <span class="fn">resolveChannelCopy</span>(row) {
+  <span class="kw">const</span> override = row[<span class="str">`channel_override_${CURRENT_CHANNEL.toLowerCase()}`</span>];
+  <span class="kw">if</span> (override) <span class="kw">return</span> override;
+
+  <span class="kw">if</span> (AB_TEST_ACTIVE && row.variation_a) <span class="kw">return</span> <span class="fn">pickVariant</span>(row);
+
+  <span class="kw">return</span> row.default_copy;
+}</pre>
+
+    <!-- 2C: API / Sheet Update Flow -->
+    <h2>2C. API &amp; Sheet Update Flow</h2>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Step</th>
+            <th>Actor</th>
+            <th>Action</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Content Editor</td>
+            <td>Edits <span class="mono">default_copy</span>, sets <span class="mono">expiry_date</span>, sets <span class="mono">status = SCHEDULED</span></td>
+            <td>Sheet UI validates char_limit before save.</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Sheet → Webhook</td>
+            <td>On-edit trigger fires webhook to API</td>
+            <td>Google Sheets: Apps Script onEdit. Airtable: native Automation.</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>API / CMS Wrapper</td>
+            <td>Invalidates CDN cache for affected <span class="mono">content_id</span></td>
+            <td>Use cache key = <span class="mono">content_id + channel</span>. Send purge to Cloudflare / Vercel edge.</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Scheduled Job</td>
+            <td>Every 5 min: scan rows where <span class="mono">expiry_date &lt;= now</span> and <span class="mono">status = ACTIVE</span>; flip to <span class="mono">EXPIRED</span></td>
+            <td>Cron on API server. This is the backstop — channels should not rely solely on this.</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Channel Renderer</td>
+            <td>Calls <span class="mono">isRenderable()</span> at render time; never trusts cached status alone</td>
+            <td>Always re-evaluate dates client/server side; cached status is stale.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 2D: Edge Cases -->
+    <h2>2D. Edge Cases — Required Handling</h2>
+
+    <div class="edge-grid">
+      <div class="edge-card">
+        <div class="edge-title"><span class="edge-risk risk-high">HIGH</span>Timezone Mismatch</div>
+        <p>Content team sets times in ET but sheet stores raw strings without timezone suffix. Channel reads as UTC, content expires 5 hours early (or late).</p>
+        <strong>Fix:</strong> Enforce UTC-only in the sheet. Sheet UI auto-converts ET input to UTC on save via a helper column: <span class="mono">expiry_date_et</span> (display) → <span class="mono">expiry_date</span> (UTC, locked). Never store bare local time in <span class="mono">expiry_date</span>.
+      </div>
+      <div class="edge-card">
+        <div class="edge-title"><span class="edge-risk risk-high">HIGH</span>Cache Serving Expired Content</div>
+        <p>CDN serves a cached page after expiry_date has passed. Event banner remains live hours after the event ended.</p>
+        <strong>Fix:</strong> Set <span class="mono">Cache-Control: s-maxage</span> equal to <span class="mono">cache_ttl_seconds</span>. For EVENT rows, default TTL = 60s. Webhook on sheet edit triggers immediate CDN purge. Channel renderer always re-evaluates dates, does not trust cached status.
+      </div>
+      <div class="edge-card">
+        <div class="edge-title"><span class="edge-risk risk-high">HIGH</span>Null expiry_date = Permanent</div>
+        <p>Editor clears <span class="mono">expiry_date</span> intending to disable, but null means "never expires" — content stays live forever.</p>
+        <strong>Fix:</strong> Null ≠ disabled. The <span class="mono">status</span> column is the only manual kill switch. Document this clearly in the sheet's frozen header row tooltip. Add a sheet validation rule: if <span class="mono">content_group = EVENT</span> and <span class="mono">expiry_date</span> is null → show warning cell.
+      </div>
+      <div class="edge-card">
+        <div class="edge-title"><span class="edge-risk risk-med">MED</span>Fallback Chain is Itself Expired</div>
+        <p>Row A expires → falls back to Row B → Row B is also expired. Component renders nothing with no warning.</p>
+        <strong>Fix:</strong> <span class="mono">resolveToFallback()</span> recurses only once (depth = 2 max). If the fallback is not renderable, log an error and return <span class="mono">{ render: false }</span>. The component must handle <span class="mono">null</span> copy gracefully — hide itself, never break layout.
+      </div>
+      <div class="edge-card">
+        <div class="edge-title"><span class="edge-risk risk-med">MED</span>Sheet API Unavailable</div>
+        <p>Google Sheets / Airtable API goes down. Channel fetches no data. All content slots are empty or broken.</p>
+        <strong>Fix:</strong> API wrapper maintains a local Redis / edge KV cache of the last successful full sheet fetch. TTL = 15 min. Channel falls back to this stale cache. No sheet = stale content, not a blank page. Alert fires to ops on first 5xx from sheet API.
+      </div>
+      <div class="edge-card">
+        <div class="edge-title"><span class="edge-risk risk-med">MED</span>Circular Fallback Reference</div>
+        <p>Row A's <span class="mono">fallback_content_id</span> = Row B; Row B's = Row A. Infinite loop crashes renderer.</p>
+        <strong>Fix:</strong> <span class="mono">resolveToFallback()</span> checks if the fallback row's <span class="mono">content_id</span> === the original row's <span class="mono">content_id</span> before recursing. If circular, log error and return <span class="mono">{ render: false }</span>. Add sheet validation to prevent self-referential fallbacks.
+      </div>
+      <div class="edge-card">
+        <div class="edge-title"><span class="edge-risk risk-low">LOW</span>publish_date in the Past + status = SCHEDULED</div>
+        <p>Editor forgets to update status after scheduling. Content has a past publish_date but status is still SCHEDULED — it never renders.</p>
+        <strong>Fix:</strong> Scheduled job that auto-flips <span class="mono">SCHEDULED → ACTIVE</span> when <span class="mono">publish_date &lt;= now</span> (same cron as expiry check). Channel renderer also treats <span class="mono">SCHEDULED</span> rows as renderable if publish window is open, regardless of status — status is a manual override, not the primary clock.
+      </div>
+      <div class="edge-card">
+        <div class="edge-title"><span class="edge-risk risk-low">LOW</span>char_limit Exceeded in Sheet</div>
+        <p>Editor saves copy that is longer than <span class="mono">char_limit</span>. Front-end truncates mid-word, breaking design layout.</p>
+        <strong>Fix:</strong> Sheet-level validation (Apps Script / Airtable formula) blocks save and highlights the cell red if <span class="mono">LEN(default_copy) &gt; char_limit</span>. API wrapper validates on ingest and rejects rows that violate char_limit with a 422 + message. Channel never truncates silently — logs a warning.
+      </div>
+    </div>
+
+    <hr class="yellow">
+
+    <!-- Quick Reference -->
+    <h2>Quick Reference: Status Enum Decision Table</h2>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>publish_date check?</th>
+            <th>expiry_date check?</th>
+            <th>Renders?</th>
+            <th>Who sets it?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="mono">ACTIVE</span></td>
+            <td>Yes — must be in window</td>
+            <td>Yes — must not be past</td>
+            <td style="color:var(--hes-green);font-weight:700;">✓ Yes</td>
+            <td>Editor or auto-promotion from SCHEDULED</td>
+          </tr>
+          <tr>
+            <td><span class="mono">SCHEDULED</span></td>
+            <td>Yes — must be in window</td>
+            <td>Yes</td>
+            <td style="color:var(--hes-green);font-weight:700;">✓ Yes (if window open)</td>
+            <td>Editor pre-publishing</td>
+          </tr>
+          <tr>
+            <td><span class="mono">DRAFT</span></td>
+            <td>No</td>
+            <td>No</td>
+            <td style="color:var(--hes-red);font-weight:700;">✗ Never</td>
+            <td>Editor (WIP)</td>
+          </tr>
+          <tr>
+            <td><span class="mono">EXPIRED</span></td>
+            <td>No</td>
+            <td>No</td>
+            <td style="color:var(--hes-red);font-weight:700;">✗ Never</td>
+            <td>Cron auto-sets; editor may set manually</td>
+          </tr>
+          <tr>
+            <td><span class="mono">DISABLED</span></td>
+            <td>No</td>
+            <td>No</td>
+            <td style="color:var(--hes-red);font-weight:700;">✗ Never (emergency kill)</td>
+            <td>Editor only — manual override, bypasses all date logic</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <strong>⚠ Engineering Implementation Note</strong>
+      The <span class="mono">status</span> column is an override, not a cache. Channels must run the full <span class="mono">isRenderable()</span> check on every request — never shortcut to "status = ACTIVE → render." The date window must always be validated in real time. This is the only way to guarantee expired content is never served, regardless of sheet webhook latency or CDN cache state.
+    </div>
+
+    <!-- Footer -->
+    <div class="doc-footer">
+      <span><strong>H.E.S. AI Brand Brain</strong> — SSOT Content Architecture Framework v1.0</span>
+      <span>Hebrew Educational Society · 9502 Seaview Ave, Brooklyn NY 11236 · thehes.org</span>
+      <span>July 2026</span>
+    </div>
+
+  </doc-page>
+
+  <script src="doc-page.js"></script>
+</body>
+</html>

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H.E.S. Content Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=League+Spartan:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { font-family: 'Montserrat', sans-serif; background: #ECEEF3; color: #1A1A2E; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #C0C4D0; border-radius: 3px; }
+input, textarea, select { font-family: 'Montserrat', sans-serif; }
+a { color: inherit; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+// ─── INITIAL DATA (flat structure — no EAV) ─────────────────────────────────
+window.HES_INITIAL = {
+
+  org: {
+    name: 'Hebrew Educational Society',
+    nickname: 'H.E.S.',
+    type: 'Jewish Community Center (JCC)',
+    founded: '1899',
+    tagline: 'YOUR Community Center',
+    mission: 'neighbors helping neighbors',
+    address: '9502 Seaview Avenue, Brooklyn, NY 11236',
+    phone: '(718) 241-3000',
+    email: 'info@thehes.org',
+    website: 'thehes.org',
+    hours_weekdays: 'Monday – Friday, 8:00 AM – 10:00 PM',
+    hours_sunday: 'Sunday, 8:00 AM – 9:30 PM',
+    partner: 'UJA Federation of New York',
+    stat_1_num: '100+',
+    stat_1_label: 'Years Serving Southeast Brooklyn',
+    stat_2_num: '5,000+',
+    stat_2_label: 'Community Members Served Annually',
+    stat_3_num: '20+',
+    stat_3_label: 'Programs Across Every Age Group'
+  },
+
+  events: [
+    {
+      id: 'itav-tech',
+      name: 'It Takes A Village · Family Tech',
+      date: 'July 2026 — check thehes.org for exact date',
+      time: '6:30 PM',
+      location: 'Zoom + Main Hall',
+      format: 'Hybrid',
+      cost: 'Free',
+      audience: 'Parents and caregivers',
+      description: 'A parent support group session focused on screen time, online safety, and healthy technology boundaries for children and teens.',
+      expires: '2026-07-31'
+    },
+    {
+      id: 'fall-festival',
+      name: 'Fall Festival 2026',
+      date: 'October 13, 2026',
+      time: '1:00 PM – 5:00 PM',
+      location: 'H.E.S. Building',
+      format: 'In-person',
+      cost: 'Free',
+      audience: 'Families and kids',
+      description: 'Harvest crafts, pumpkin painting, seasonal treats, and family photo booths at the main facility lobby and courtyard. Volunteers and local vendors wanted.',
+      expires: '2026-10-13'
+    },
+    {
+      id: 'thanksgiving',
+      name: 'Thanksgiving Food Drive 2026',
+      date: 'November 22–26, 2026',
+      time: 'During building hours',
+      location: 'H.E.S. Building Lobby — donation drop-boxes',
+      format: 'In-person',
+      cost: 'Free — donations welcome',
+      audience: 'Donors and supporters',
+      description: 'We are collecting non-perishable food items, canned goods, and holiday staples in the main lobby drop-boxes to support our food pantry distribution.',
+      expires: '2026-11-26'
+    },
+    {
+      id: 'holiday-gala',
+      name: 'Holiday Gala 2026',
+      date: 'December 10, 2026',
+      time: '6:00 PM – 10:00 PM',
+      location: 'H.E.S. Building',
+      format: 'In-person',
+      cost: 'Ticket sales / RSVP — details coming soon',
+      audience: 'Members and community',
+      description: 'Annual holiday gala at H.E.S. — catered dinner, live entertainment, and a celebration of another year of serving the Canarsie community.',
+      expires: '2026-12-10'
+    }
+  ],
+
+  programs: [
+    { id: 'summer-camp', name: 'Summer Camp', color: '#F26522', ages: '4–16', schedule: 'June 29 – August 19, 2026', description: 'Arts, swim, karate, STEM, trips, and so much more. Day Camp, Teen Unit, Camp Xtra (inclusive), and Vacation Program.', subPrograms: ['Day Camp (ages 4–12)', 'Teen Unit (ages 13–16)', 'Camp Xtra (inclusive, ages 4–16)', 'Vacation Program (school holidays)'] },
+    { id: 'aquatics', name: 'Aquatics', color: '#3DB8F5', ages: 'All ages', schedule: 'Year-round', description: 'Full swim center with group lessons, private lessons, open recreational swim, fitness lap swim, and Parent & Tot classes.', subPrograms: ['Group Swim Lessons', 'Private Swim Lessons', 'Open Recreational Swim', 'Fitness Lap Swim', 'Parent & Tot Water Classes'] },
+    { id: 'early-childhood', name: 'Early Childhood', color: '#1FB59C', ages: '2.5–5', schedule: 'Monday–Friday, all school year', description: 'Play-based early learning for ages 2.5–5. Pre-K For All (free, NYC DOE funded), Preschool Classroom, Instructional Gym, Music & Movement, and Arts & Crafts.', subPrograms: ['Pre-K For All (free)', 'Preschool Classroom', 'Instructional Gym', 'Music & Movement', 'Arts & Crafts'] },
+    { id: 'sports-fitness', name: 'Sports & Fitness', color: '#E8363A', ages: 'Youth & Adults', schedule: 'Throughout the week', description: 'Gym, sauna, Yoga, Zumba, Cardio Kickboxing, Basketball League, Soccer League, and Martial Arts.', subPrograms: ['Fitness Center (gym + sauna)', 'Yoga', 'Zumba', 'Cardio Kickboxing', 'Basketball League', 'Soccer League', 'Martial Arts'] },
+    { id: 'disability', name: 'Disability Services', color: '#2AAB47', ages: '4–16', schedule: 'Year-round', description: 'Fully inclusive and integrated programming. R.A.P. Room after-school, Camp Xtra summer inclusion, and family support for caregivers.', subPrograms: ['R.A.P. Room After-School Inclusion', 'Camp Xtra Summer Inclusion', 'Family Support & Caregiver Resources'] },
+    { id: 'music', name: 'Music School', color: '#8E4FB8', ages: 'All ages', schedule: 'Year-round', description: 'Private one-on-one lessons in piano, guitar, drums, and voice. Seasonal recitals and ensembles.', subPrograms: ['Private Lessons (piano, guitar, drums, voice)', 'Recitals & Ensembles'] },
+    { id: 'after-school', name: 'After School', color: '#F5C400', ages: '4–19', schedule: 'Mon–Fri, 3:30–6:00 PM', description: 'Homework help, enrichment, and supervised activities for ages 4–14. Teen Leadership Council (free, ages 13–19) for college prep and life skills.', subPrograms: ['After School Program (ages 4–14)', 'Teen Leadership Council (ages 13–19, free)'] },
+    { id: 'social-services', name: 'Social Services', color: '#0D1070', ages: 'All ages', schedule: 'Year-round', description: 'Food Pantry, Benefits Navigation, Senior Adult Program, Sunday Senior Program, Tax Preparation, and Community Health & Prevention.', subPrograms: ['Food Pantry (Tue & Thu, 10 AM–2 PM)', 'Benefits & Entitlements Navigation', 'Senior Adult Program', 'Sunday Senior Program', 'Tax Preparation Assistance', 'Community Health & Prevention'] }
+  ],
+
+  pages: {
+    'Food Pantry': {
+      hero_headline: 'No Family in Canarsie Should Go Hungry.',
+      hero_subtitle: 'The H.E.S. Food Pantry provides food to countless residents of our community — free, dignified, and open to all.',
+      card_1_title: 'Monthly Food Packages', card_1_body: 'Pre-scheduled monthly pick-up appointments provide families with essential groceries and pantry staples.',
+      card_2_title: 'No Eligibility Required', card_2_body: 'The H.E.S. Food Pantry is open to all community members. No documentation or income verification required.',
+      card_3_title: 'Family-Sized Portions', card_3_body: 'Food packages are sized to meet the needs of your household — from individuals to large families.',
+      card_4_title: 'Culturally Appropriate', card_4_body: 'We work to provide food that reflects the diverse dietary needs and cultural backgrounds of our Canarsie community.',
+      highlight: 'To register or schedule your monthly pick-up appointment, call us or email Moshit@thehes.org. Our team will respond within one business day.',
+      step_1_label: 'Contact Us', step_1_body: 'Call or email Moshit@thehes.org to speak with our Food Pantry coordinator.',
+      step_2_label: 'Register Your Household', step_2_body: 'Provide your name, address, and household size so we can prepare the right package for your family.',
+      step_3_label: 'Schedule Your Appointment', step_3_body: 'We will book your monthly pick-up appointment at a time that works for you.',
+      step_4_label: 'Pick Up Your Package', step_4_body: 'Arrive at H.E.S. at your scheduled time. Pick-ups are quick, dignified, and easy.',
+      contact_phone_ext: 'ext. 124', contact_email: 'Moshit@thehes.org'
+    },
+    'Senior Adults': {
+      hero_headline: 'Programs That Honor Every Stage of Life.',
+      hero_subtitle: 'Senior services offered in collaboration with partner agencies across southeast Brooklyn — keeping our community\'s elders active, connected, and cared for.',
+      card_1_title: 'Social & Recreational Activities', card_1_body: 'Group activities, trips, and social events designed to keep seniors engaged, active, and connected to their community.',
+      card_2_title: 'Health & Wellness Support', card_2_body: 'Fitness programs, wellness check-ins, and referrals to health services — supporting the physical wellbeing of older adults.',
+      card_3_title: 'Benefits Navigation', card_3_body: 'Our social work team helps seniors navigate Medicare, Medicaid, SNAP, housing, and other benefits they may be entitled to.',
+      card_4_title: 'Agency Collaborations', card_4_body: 'H.E.S. works in partnership with other Brooklyn-based agencies to expand the range of services available to our senior members.',
+      highlight: 'Contact our Social Services team to learn about current senior programming, schedules, and how to get connected.',
+      activity_1_title: 'Group Outings & Trips', activity_1_body: 'Supervised trips to cultural events, restaurants, and points of interest around New York City and beyond.',
+      activity_2_title: 'Fitness & Movement', activity_2_body: 'Low-impact exercise classes, yoga, and water aerobics in our aquatics center — keeping seniors active safely.',
+      activity_3_title: 'Arts & Enrichment', activity_3_body: 'Creative workshops, music appreciation, and cultural programming tailored to the interests of our senior members.',
+      activity_4_title: 'Social Gatherings', activity_4_body: 'Holiday celebrations, lunches, and informal social hours to keep seniors connected to their peers and neighbors.'
+    },
+    'Community Resources': {
+      hero_headline: 'We\'ll Help You Find the Next Step.',
+      hero_subtitle: 'Benefits navigation, referrals, case management, and community workshops — connecting families with the support they deserve.',
+      card_1_title: 'Benefits Navigation', card_1_body: 'Our team helps you understand and access SNAP, Medicaid, housing assistance, OPWWD, ACS, HRA, and other government benefits you may qualify for.',
+      card_2_title: 'Referral Services', card_2_body: 'We connect families with the right agencies, clinics, and organizations across Brooklyn — so you never have to navigate the system alone.',
+      card_3_title: 'Case Management', card_3_body: 'Individualized support from H.E.S. social workers who help you identify goals, access resources, and track your progress over time.',
+      card_4_title: 'Crisis Support', card_4_body: 'If your family is facing an urgent challenge — housing instability, domestic concerns, or immediate health needs — contact us right away.',
+      workshop_1_title: 'Financial Literacy', workshop_1_body: 'Budgeting, saving, credit, and financial planning for individuals and families at every income level.',
+      workshop_2_title: 'Educational & Job Skills', workshop_2_body: 'Resume writing, job readiness, GED prep, and adult literacy — helping community members build toward economic stability.',
+      workshop_3_title: 'Family Safety', workshop_3_body: 'Workshops on personal safety, domestic wellness, and how to protect your family\'s health and wellbeing.',
+      workshop_4_title: 'Preparing for the Future', workshop_4_body: 'Sessions focused on planning for your children\'s educational and professional future — from school readiness to college prep.',
+      workshop_5_title: 'Drug & Alcohol Prevention', workshop_5_body: 'OASAS-funded evidence-based prevention program reaching more than 2,000 Brooklyn residents annually.',
+      workshop_6_title: 'Public Health Outreach', workshop_6_body: 'Staff-led health education and vaccination outreach through the NYC Public Health Equity initiative.'
+    },
+    'Volunteer': {
+      hero_headline: 'Serve YOUR Community. Make a Real Impact.',
+      hero_subtitle: 'Gain hands-on public health experience, build leadership skills, and maintain your SNAP eligibility — all while making a difference in Canarsie.',
+      card_1_title: 'Hands-On Public Health Experience', card_1_body: 'Work alongside H.E.S. staff on real community health initiatives — from food distribution to public health outreach and vaccination drives.',
+      card_2_title: 'Leadership Development', card_2_body: 'Sharpen communication, teamwork, and problem-solving skills through structured volunteer programming designed to build real-world capabilities.',
+      card_3_title: 'Community Connection', card_3_body: 'Become part of the H.E.S. community. Volunteers build lasting relationships with staff, program participants, and fellow community members.',
+      card_4_title: 'SNAP Eligibility Maintained', card_4_body: 'Volunteer with H.E.S. while maintaining your SNAP benefits — a meaningful opportunity to serve and grow without jeopardizing your support.',
+      step_1_label: 'Reach Out', step_1_body: 'Contact our Social Services team by phone or email to express your interest in volunteering.',
+      step_2_label: 'Orientation', step_2_body: 'Attend a brief volunteer orientation to learn about H.E.S., our programs, and how you\'ll contribute to the community.',
+      step_3_label: 'Get Placed', step_3_body: 'Based on your interests and availability, our team will match you to a volunteer role that fits your schedule.',
+      step_4_label: 'Start Serving', step_4_body: 'Begin your volunteer hours and make a direct impact on families and individuals across southeast Brooklyn.',
+      role_1_title: 'Food Pantry Assistant', role_1_body: 'Help sort, pack, and distribute food packages to community members during scheduled pantry hours.',
+      role_2_title: 'Public Health Outreach', role_2_body: 'Support H.E.S. staff in health education, vaccination outreach, and community wellness events.',
+      role_3_title: 'Program Support', role_3_body: 'Assist with after-school programs, summer camp, youth sports, or early childhood activities.',
+      role_4_title: 'Event Volunteer', role_4_body: 'Help set up and run community events including the Annual Street Fair and holiday celebrations.',
+      role_5_title: 'Administrative Support', role_5_body: 'Provide office support including data entry, reception, and community outreach materials.',
+      role_6_title: 'Senior Companion', role_6_body: 'Spend time with H.E.S. senior adults through social visits, activities, and light assistance.'
+    },
+    'Parent Support Groups': {
+      hero_headline: 'You Don\'t Have to Navigate Parenthood Alone.',
+      hero_subtitle: 'Free weekly support groups for parents and caregivers — facilitated by H.E.S. social work professionals every Thursday.',
+      hero_eyebrow: 'Social Services · Weekly via Zoom · Thursdays',
+      overview_highlight: 'Sessions are facilitated by H.E.S. social work professionals. Free, confidential, and open to the entire community. Register to receive your Zoom link.',
+      join_highlight: 'H.E.S. support groups are provided at no cost to all community members. Participation is voluntary and all disclosures are kept confidential.',
+      group_1_name: 'It Takes A Village', group_1_schedule: '1st Thursday of each month', group_1_tagline: 'Supporting Parents Through the Journey', group_1_description: 'A safe, welcoming space for parents and caregivers to connect, share experiences, and support one another through the challenges and joys of raising children.',
+      group_2_name: 'Journey Through Grief', group_2_schedule: '2nd Thursday of each month', group_2_tagline: 'Pathway to Healing', group_2_description: 'A compassionate group for parents and caregivers navigating loss. Facilitated by H.E.S. social work professionals, this group offers a supportive environment to process grief.',
+      group_3_name: 'Navigating the Journey', group_3_schedule: '3rd Thursday of each month', group_3_tagline: 'Supporting Families with Disabilities', group_3_description: 'Designed for parents and caregivers of children and adults with disabilities. Offers strategies, peer support, and resource navigation for the unique challenges of caring for family members with disabilities.',
+      group_4_name: 'Screen Time & Technology', group_4_schedule: '4th Thursday of each month', group_4_tagline: 'Navigating Technology in Today\'s Digital World', group_4_description: 'Helping families navigate technology in today\'s digital landscape — screen time management, online safety, social media guidance, and establishing healthy boundaries.'
+    },
+    'HES Documentary': {
+      hero_headline: 'A Century of Community.',
+      hero_subtitle: 'The story of the Hebrew Educational Society — over 100 years of neighbors helping neighbors in southeast Brooklyn.',
+      section_headline: 'YOUR H.E.S. — The Documentary',
+      description: 'The Hebrew Educational Society has been at the heart of Canarsie for well over a century. This documentary tells the story of our community — the families, staff, and neighbors whose lives have been shaped by H.E.S.',
+      youtube_id: '',
+      stat_1_num: '100+', stat_1_label: 'Years in Canarsie',
+      stat_2_num: '106K+', stat_2_label: 'Annual Community Visits',
+      stat_3_num: '1899', stat_3_label: 'Founded'
+    },
+    'HES Story': {
+      hero_headline: 'Share YOUR H.E.S. Story.',
+      hero_subtitle: 'Over 100 years of community moments — help us celebrate yours.',
+      intro_1: 'The H.E.S. has welcomed the Brooklyn community and beyond for well over a hundred years, and served thousands of individuals and their families within that time.',
+      intro_2: 'Please share your personal connection to H.E.S. through our storytelling mission — H.E.S. Stories — where we celebrate you, YOUR stories, and your journey at the Hebrew Educational Society.',
+      prompt_1: 'Do you have a family history at H.E.S.?',
+      prompt_2: 'Did you meet your best friend or spouse here?',
+      prompt_3: 'Are you a camper who became a counselor?',
+      prompt_4: 'Are you a longtime member with decades of memories?',
+      prompt_5: 'Did H.E.S. change your life in a meaningful way?',
+      closing: 'Whether you are new to the building or have an amazing, decades-old moment you\'ve always remembered — we want to hear it!',
+      highlight: 'Complete the short form to share your name and story with us. Selected stories may be featured on the H.E.S. website with your permission.',
+      google_form_url: ''
+    }
+  }
+};
+</script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+const D = window.HES_INITIAL;
+
+// ─── HELPERS ────────────────────────────────────────────────────────────────
+function uid() { return Math.random().toString(36).slice(2); }
+
+function useData() {
+  const [data, setData] = useState(() => {
+    try {
+      const s = localStorage.getItem('hes-cm-v1');
+      return s ? JSON.parse(s) : JSON.parse(JSON.stringify(D));
+    } catch { return JSON.parse(JSON.stringify(D)); }
+  });
+  useEffect(() => {
+    localStorage.setItem('hes-cm-v1', JSON.stringify(data));
+  }, [data]);
+  return [data, setData];
+}
+
+// ─── FIELD DEFS FOR PAGE SCHEMAS ────────────────────────────────────────────
+const PAGE_SCHEMAS = {
+  'Food Pantry': [
+    { section: 'Hero', fields: [['hero_headline','Headline'],['hero_subtitle','Subtitle']] },
+    { section: 'Overview Cards', fields: [['card_1_title','Card 1 Title'],['card_1_body','Card 1 Body'],['card_2_title','Card 2 Title'],['card_2_body','Card 2 Body'],['card_3_title','Card 3 Title'],['card_3_body','Card 3 Body'],['card_4_title','Card 4 Title'],['card_4_body','Card 4 Body']] },
+    { section: 'Highlight Box', fields: [['highlight','Highlight Text']] },
+    { section: 'Steps (How It Works)', fields: [['step_1_label','Step 1 Label'],['step_1_body','Step 1 Detail'],['step_2_label','Step 2 Label'],['step_2_body','Step 2 Detail'],['step_3_label','Step 3 Label'],['step_3_body','Step 3 Detail'],['step_4_label','Step 4 Label'],['step_4_body','Step 4 Detail']] },
+    { section: 'Contact Info', fields: [['contact_phone_ext','Phone Extension'],['contact_email','Email']] }
+  ],
+  'Senior Adults': [
+    { section: 'Hero', fields: [['hero_headline','Headline'],['hero_subtitle','Subtitle']] },
+    { section: 'Overview Cards', fields: [['card_1_title','Card 1 Title'],['card_1_body','Card 1 Body'],['card_2_title','Card 2 Title'],['card_2_body','Card 2 Body'],['card_3_title','Card 3 Title'],['card_3_body','Card 3 Body'],['card_4_title','Card 4 Title'],['card_4_body','Card 4 Body']] },
+    { section: 'Highlight Box', fields: [['highlight','Highlight Text']] },
+    { section: 'Activities', fields: [['activity_1_title','Activity 1 Title'],['activity_1_body','Activity 1 Detail'],['activity_2_title','Activity 2 Title'],['activity_2_body','Activity 2 Detail'],['activity_3_title','Activity 3 Title'],['activity_3_body','Activity 3 Detail'],['activity_4_title','Activity 4 Title'],['activity_4_body','Activity 4 Detail']] }
+  ],
+  'Community Resources': [
+    { section: 'Hero', fields: [['hero_headline','Headline'],['hero_subtitle','Subtitle']] },
+    { section: 'Overview Cards', fields: [['card_1_title','Card 1 Title'],['card_1_body','Card 1 Body'],['card_2_title','Card 2 Title'],['card_2_body','Card 2 Body'],['card_3_title','Card 3 Title'],['card_3_body','Card 3 Body'],['card_4_title','Card 4 Title'],['card_4_body','Card 4 Body']] },
+    { section: 'Workshops', fields: [['workshop_1_title','Workshop 1 Title'],['workshop_1_body','Workshop 1 Body'],['workshop_2_title','Workshop 2 Title'],['workshop_2_body','Workshop 2 Body'],['workshop_3_title','Workshop 3 Title'],['workshop_3_body','Workshop 3 Body'],['workshop_4_title','Workshop 4 Title'],['workshop_4_body','Workshop 4 Body'],['workshop_5_title','Workshop 5 Title'],['workshop_5_body','Workshop 5 Body'],['workshop_6_title','Workshop 6 Title'],['workshop_6_body','Workshop 6 Body']] }
+  ],
+  'Volunteer': [
+    { section: 'Hero', fields: [['hero_headline','Headline'],['hero_subtitle','Subtitle']] },
+    { section: 'Overview Cards', fields: [['card_1_title','Card 1 Title'],['card_1_body','Card 1 Body'],['card_2_title','Card 2 Title'],['card_2_body','Card 2 Body'],['card_3_title','Card 3 Title'],['card_3_body','Card 3 Body'],['card_4_title','Card 4 Title'],['card_4_body','Card 4 Body']] },
+    { section: 'Steps (How to Volunteer)', fields: [['step_1_label','Step 1 Label'],['step_1_body','Step 1 Detail'],['step_2_label','Step 2 Label'],['step_2_body','Step 2 Detail'],['step_3_label','Step 3 Label'],['step_3_body','Step 3 Detail'],['step_4_label','Step 4 Label'],['step_4_body','Step 4 Detail']] },
+    { section: 'Volunteer Roles', fields: [['role_1_title','Role 1 Title'],['role_1_body','Role 1 Detail'],['role_2_title','Role 2 Title'],['role_2_body','Role 2 Detail'],['role_3_title','Role 3 Title'],['role_3_body','Role 3 Detail'],['role_4_title','Role 4 Title'],['role_4_body','Role 4 Detail'],['role_5_title','Role 5 Title'],['role_5_body','Role 5 Detail'],['role_6_title','Role 6 Title'],['role_6_body','Role 6 Detail']] }
+  ],
+  'Parent Support Groups': [
+    { section: 'Hero', fields: [['hero_headline','Headline'],['hero_subtitle','Subtitle'],['hero_eyebrow','Eyebrow (small text above headline)']] },
+    { section: 'Highlight Boxes', fields: [['overview_highlight','Overview Highlight'],['join_highlight','Join Section Highlight']] },
+    { section: 'Group 1 — It Takes A Village', fields: [['group_1_name','Group Name'],['group_1_schedule','Schedule'],['group_1_tagline','Tagline'],['group_1_description','Description']] },
+    { section: 'Group 2 — Journey Through Grief', fields: [['group_2_name','Group Name'],['group_2_schedule','Schedule'],['group_2_tagline','Tagline'],['group_2_description','Description']] },
+    { section: 'Group 3 — Navigating the Journey', fields: [['group_3_name','Group Name'],['group_3_schedule','Schedule'],['group_3_tagline','Tagline'],['group_3_description','Description']] },
+    { section: 'Group 4 — Screen Time & Technology', fields: [['group_4_name','Group Name'],['group_4_schedule','Schedule'],['group_4_tagline','Tagline'],['group_4_description','Description']] }
+  ],
+  'HES Documentary': [
+    { section: 'Hero', fields: [['hero_headline','Headline'],['hero_subtitle','Subtitle']] },
+    { section: 'Content', fields: [['section_headline','Section Headline'],['description','Description'],['youtube_id','YouTube Video ID (e.g. abc123 from youtube.com/watch?v=abc123)']] },
+    { section: 'Stats Bar', fields: [['stat_1_num','Stat 1 Number'],['stat_1_label','Stat 1 Label'],['stat_2_num','Stat 2 Number'],['stat_2_label','Stat 2 Label'],['stat_3_num','Stat 3 Number'],['stat_3_label','Stat 3 Label']] }
+  ],
+  'HES Story': [
+    { section: 'Hero', fields: [['hero_headline','Headline'],['hero_subtitle','Subtitle']] },
+    { section: 'Intro Text', fields: [['intro_1','Intro Paragraph 1'],['intro_2','Intro Paragraph 2']] },
+    { section: 'Story Prompts', fields: [['prompt_1','Prompt 1'],['prompt_2','Prompt 2'],['prompt_3','Prompt 3'],['prompt_4','Prompt 4'],['prompt_5','Prompt 5'],['closing','Closing Line']] },
+    { section: 'Form & Highlight', fields: [['google_form_url','Google Form Embed URL'],['highlight','Highlight Text']] }
+  ]
+};
+
+// ─── STYLES ──────────────────────────────────────────────────────────────────
+const S = {
+  app: { display:'flex', height:'100vh', overflow:'hidden' },
+  sidebar: { width:220, background:'#1A1F8F', display:'flex', flexDirection:'column', flexShrink:0, overflow:'hidden' },
+  sidebarHeader: { padding:'24px 20px 16px', borderBottom:'1px solid rgba(255,255,255,0.1)' },
+  sidebarLogo: { fontFamily:"'League Spartan', sans-serif", fontSize:22, fontWeight:800, color:'#F5C400', letterSpacing:1 },
+  sidebarSub: { fontSize:10, color:'rgba(255,255,255,0.5)', marginTop:2, fontWeight:500, letterSpacing:0.5, textTransform:'uppercase' },
+  nav: { flex:1, overflowY:'auto', padding:'12px 0' },
+  navGroup: { padding:'6px 20px 2px', fontSize:9, fontWeight:700, color:'rgba(255,255,255,0.35)', letterSpacing:1.2, textTransform:'uppercase' },
+  main: { flex:1, display:'flex', flexDirection:'column', overflow:'hidden' },
+  topbar: { background:'#fff', borderBottom:'1px solid #E2E5EA', padding:'0 32px', height:60, display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 },
+  topTitle: { fontFamily:"'League Spartan', sans-serif", fontSize:20, fontWeight:800, color:'#1A1F8F' },
+  content: { flex:1, overflowY:'auto', padding:'28px 32px' },
+  card: { background:'#fff', borderRadius:10, border:'1px solid #E2E5EA', padding:20, marginBottom:16 },
+  label: { display:'block', fontSize:11, fontWeight:700, color:'#6B7280', textTransform:'uppercase', letterSpacing:0.8, marginBottom:4 },
+  input: { width:'100%', border:'1px solid #D1D5DB', borderRadius:6, padding:'8px 10px', fontSize:13, color:'#1A1A2E', outline:'none', transition:'border 0.15s', background:'#fff' },
+  textarea: { width:'100%', border:'1px solid #D1D5DB', borderRadius:6, padding:'8px 10px', fontSize:13, color:'#1A1A2E', outline:'none', resize:'vertical', minHeight:72, transition:'border 0.15s', background:'#fff' },
+  row: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:12 },
+  secHead: { fontSize:12, fontWeight:700, color:'#1A1F8F', textTransform:'uppercase', letterSpacing:0.8, borderBottom:'2px solid #F5C400', paddingBottom:6, marginBottom:14, marginTop:24 },
+  btn: (color, outline) => ({
+    display:'inline-flex', alignItems:'center', gap:6, padding:'8px 16px', borderRadius:6,
+    fontSize:12, fontWeight:700, cursor:'pointer', border: outline ? `1.5px solid ${color}` : 'none',
+    background: outline ? 'transparent' : color, color: outline ? color : '#fff',
+    letterSpacing:0.3, transition:'opacity 0.15s'
+  }),
+  badge: (color) => ({ display:'inline-block', background: color+'18', color: color, fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:20, letterSpacing:0.5 }),
+  eventCard: { background:'#fff', border:'1px solid #E2E5EA', borderRadius:10, overflow:'hidden', display:'flex', flexDirection:'column' },
+  eventCardTop: (color) => ({ background: color, padding:'14px 16px 10px' }),
+  modalOverlay: { position:'fixed', inset:0, background:'rgba(10,15,60,0.55)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000, padding:20 },
+  modal: { background:'#fff', borderRadius:12, width:'100%', maxWidth:640, maxHeight:'90vh', overflowY:'auto', boxShadow:'0 20px 60px rgba(0,0,0,0.25)' },
+  modalHead: { padding:'20px 24px 16px', borderBottom:'1px solid #E2E5EA', position:'sticky', top:0, background:'#fff', zIndex:1 },
+  toast: { position:'fixed', bottom:24, right:24, background:'#1A1F8F', color:'#fff', padding:'10px 18px', borderRadius:8, fontSize:13, fontWeight:600, zIndex:2000, boxShadow:'0 4px 20px rgba(0,0,0,0.2)', display:'flex', alignItems:'center', gap:8 }
+};
+
+// ─── NAV ITEM ─────────────────────────────────────────────────────────────────
+function NavItem({ label, active, onClick, indent }) {
+  return (
+    <div onClick={onClick} style={{
+      padding: indent ? '7px 20px 7px 32px' : '8px 20px',
+      cursor:'pointer', fontSize: indent ? 12 : 13, fontWeight: active ? 700 : 500,
+      color: active ? '#F5C400' : 'rgba(255,255,255,0.75)',
+      background: active ? 'rgba(255,255,255,0.08)' : 'transparent',
+      borderLeft: active ? '3px solid #F5C400' : '3px solid transparent',
+      transition:'all 0.15s', userSelect:'none'
+    }}>
+      {label}
+    </div>
+  );
+}
+
+// ─── TOAST ────────────────────────────────────────────────────────────────────
+function Toast({ msg }) {
+  return <div style={S.toast}>✓ {msg}</div>;
+}
+
+// ─── FIELD ───────────────────────────────────────────────────────────────────
+function Field({ label, value, onChange, multi, hint }) {
+  const big = multi || (value && value.length > 80);
+  return (
+    <div style={{ marginBottom:12 }}>
+      <label style={S.label}>{label}{hint && <span style={{ color:'#9CA3AF', fontWeight:400, textTransform:'none', letterSpacing:0, marginLeft:4 }}>— {hint}</span>}</label>
+      {big
+        ? <textarea style={S.textarea} value={value||''} onChange={e=>onChange(e.target.value)}
+            onFocus={e=>e.target.style.border='1px solid #1A1F8F'}
+            onBlur={e=>e.target.style.border='1px solid #D1D5DB'} rows={3} />
+        : <input style={S.input} value={value||''} onChange={e=>onChange(e.target.value)}
+            onFocus={e=>e.target.style.border='1px solid #1A1F8F'}
+            onBlur={e=>e.target.style.border='1px solid #D1D5DB'} />}
+    </div>
+  );
+}
+
+// ─── EVENT MODAL ─────────────────────────────────────────────────────────────
+function EventModal({ event, onSave, onClose }) {
+  const blank = { id: uid(), name:'', date:'', time:'', location:'', format:'In-person', cost:'Free', audience:'', description:'', expires:'' };
+  const [form, setForm] = useState(event ? {...event} : blank);
+  const set = (k) => (v) => setForm(f => ({...f, [k]: v}));
+  const isNew = !event;
+
+  return (
+    <div style={S.modalOverlay} onClick={e => e.target === e.currentTarget && onClose()}>
+      <div style={S.modal}>
+        <div style={S.modalHead}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+            <span style={{ fontFamily:"'League Spartan', sans-serif", fontSize:18, fontWeight:800, color:'#1A1F8F' }}>{isNew ? 'Add New Event' : 'Edit Event'}</span>
+            <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', fontSize:20, color:'#9CA3AF', lineHeight:1 }}>×</button>
+          </div>
+        </div>
+        <div style={{ padding:'20px 24px 24px' }}>
+          <Field label="Event Name" value={form.name} onChange={set('name')} />
+          <div style={S.row}>
+            <Field label="Date" value={form.date} onChange={set('date')} hint="e.g. October 13, 2026" />
+            <Field label="Time" value={form.time} onChange={set('time')} hint="e.g. 1:00 PM – 5:00 PM" />
+          </div>
+          <div style={S.row}>
+            <Field label="Location" value={form.location} onChange={set('location')} />
+            <div style={{ marginBottom:12 }}>
+              <label style={S.label}>Format</label>
+              <select style={{...S.input, height:36}} value={form.format} onChange={e=>set('format')(e.target.value)}>
+                <option>In-person</option><option>Hybrid</option><option>Online / Zoom</option>
+              </select>
+            </div>
+          </div>
+          <div style={S.row}>
+            <Field label="Cost / Admission" value={form.cost} onChange={set('cost')} />
+            <Field label="Audience" value={form.audience} onChange={set('audience')} hint="e.g. Families and kids" />
+          </div>
+          <Field label="Description" value={form.description} onChange={set('description')} multi />
+          <Field label="Expiry Date" value={form.expires} onChange={set('expires')} hint="YYYY-MM-DD — event hides from site after this date" />
+          <div style={{ display:'flex', gap:10, justifyContent:'flex-end', marginTop:8 }}>
+            <button style={S.btn('#6B7280', true)} onClick={onClose}>Cancel</button>
+            <button style={S.btn('#1A1F8F')} onClick={() => { if(form.name.trim()) onSave(form); }}>
+              {isNew ? '+ Add Event' : 'Save Changes'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── EVENTS SECTION ──────────────────────────────────────────────────────────
+const FORMAT_COLORS = { 'In-person': '#2AAB47', 'Hybrid': '#8E4FB8', 'Online / Zoom': '#3DB8F5' };
+
+function EventsSection({ events, onChange, onToast }) {
+  const [modal, setModal] = useState(null); // null | 'new' | event obj
+  const [confirmDel, setConfirmDel] = useState(null);
+
+  function save(form) {
+    if (modal === 'new') {
+      onChange([...events, form]);
+      onToast('Event added');
+    } else {
+      onChange(events.map(e => e.id === form.id ? form : e));
+      onToast('Event saved');
+    }
+    setModal(null);
+  }
+
+  function del(id) {
+    onChange(events.filter(e => e.id !== id));
+    setConfirmDel(null);
+    onToast('Event deleted');
+  }
+
+  function exportCSV() {
+    const cols = ['name','date','time','location','format','cost','audience','description','expires'];
+    const header = cols.join(',');
+    const rows = events.map(e => cols.map(c => `"${(e[c]||'').replace(/"/g,'""')}"`).join(','));
+    const csv = [header, ...rows].join('\n');
+    const a = document.createElement('a'); a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download = 'HES_Events.csv'; a.click();
+  }
+
+  return (
+    <div>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20 }}>
+        <div>
+          <div style={{ fontFamily:"'League Spartan', sans-serif", fontSize:22, fontWeight:800, color:'#1A1F8F' }}>Events</div>
+          <div style={{ fontSize:12, color:'#6B7280', marginTop:2 }}>{events.length} event{events.length !== 1 ? 's' : ''} on the website</div>
+        </div>
+        <div style={{ display:'flex', gap:10 }}>
+          <button style={S.btn('#6B7280', true)} onClick={exportCSV}>↓ Export CSV</button>
+          <button style={S.btn('#E8363A')} onClick={() => setModal('new')}>+ Add Event</button>
+        </div>
+      </div>
+
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(320px, 1fr))', gap:16 }}>
+        {events.map(ev => (
+          <div key={ev.id} style={S.eventCard}>
+            <div style={{ padding:'16px 18px', borderBottom:'1px solid #F3F4F6' }}>
+              <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10 }}>
+                <div style={{ fontFamily:"'League Spartan', sans-serif", fontSize:16, fontWeight:800, color:'#1A1A2E', lineHeight:1.25 }}>{ev.name}</div>
+                <span style={S.badge(FORMAT_COLORS[ev.format]||'#6B7280')}>{ev.format}</span>
+              </div>
+            </div>
+            <div style={{ padding:'12px 18px', flex:1 }}>
+              <div style={{ display:'grid', gridTemplateColumns:'auto 1fr', gap:'4px 10px', fontSize:12, color:'#4B5563', marginBottom:10 }}>
+                {ev.date && <><span style={{ color:'#9CA3AF' }}>📅</span><span>{ev.date}</span></>}
+                {ev.time && <><span style={{ color:'#9CA3AF' }}>🕐</span><span>{ev.time}</span></>}
+                {ev.location && <><span style={{ color:'#9CA3AF' }}>📍</span><span>{ev.location}</span></>}
+                {ev.cost && <><span style={{ color:'#9CA3AF' }}>🎟</span><span>{ev.cost}</span></>}
+              </div>
+              {ev.description && <p style={{ fontSize:12, color:'#6B7280', lineHeight:1.5, margin:0 }}>{ev.description}</p>}
+            </div>
+            <div style={{ padding:'10px 18px', borderTop:'1px solid #F3F4F6', display:'flex', gap:8, background:'#FAFAFA' }}>
+              <button style={{...S.btn('#1A1F8F', true), padding:'6px 12px', fontSize:11}} onClick={() => setModal(ev)}>✏ Edit</button>
+              <button style={{...S.btn('#E8363A', true), padding:'6px 12px', fontSize:11}} onClick={() => setConfirmDel(ev.id)}>🗑 Delete</button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {events.length === 0 && (
+        <div style={{ textAlign:'center', padding:'60px 0', color:'#9CA3AF' }}>
+          <div style={{ fontSize:40, marginBottom:12 }}>📅</div>
+          <div style={{ fontWeight:600 }}>No events yet</div>
+          <div style={{ fontSize:12, marginTop:4 }}>Click "+ Add Event" to add your first one</div>
+        </div>
+      )}
+
+      {(modal === 'new' || (modal && modal.id)) &&
+        <EventModal event={modal === 'new' ? null : modal} onSave={save} onClose={() => setModal(null)} />}
+
+      {confirmDel && (
+        <div style={S.modalOverlay} onClick={() => setConfirmDel(null)}>
+          <div style={{ background:'#fff', borderRadius:10, padding:28, maxWidth:380, width:'100%', textAlign:'center' }}>
+            <div style={{ fontSize:32, marginBottom:12 }}>🗑</div>
+            <div style={{ fontFamily:"'League Spartan', sans-serif", fontSize:18, fontWeight:800, marginBottom:8 }}>Delete this event?</div>
+            <div style={{ fontSize:13, color:'#6B7280', marginBottom:20 }}>This cannot be undone.</div>
+            <div style={{ display:'flex', gap:10, justifyContent:'center' }}>
+              <button style={S.btn('#6B7280', true)} onClick={() => setConfirmDel(null)}>Cancel</button>
+              <button style={S.btn('#E8363A')} onClick={() => del(confirmDel)}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── PAGES SECTION ────────────────────────────────────────────────────────────
+const PAGE_NAMES = Object.keys(PAGE_SCHEMAS);
+
+function PagesSection({ pages, onChange, onToast }) {
+  const [activePage, setActivePage] = useState(PAGE_NAMES[0]);
+  const pageData = pages[activePage] || {};
+  const schema = PAGE_SCHEMAS[activePage] || [];
+  const isLong = (k) => k.includes('body') || k.includes('description') || k.includes('subtitle') || k.includes('highlight') || k.includes('intro') || k.includes('closing');
+
+  function setField(k, v) {
+    onChange({ ...pages, [activePage]: { ...pageData, [k]: v } });
+  }
+
+  return (
+    <div style={{ display:'flex', gap:24 }}>
+      {/* Page picker */}
+      <div style={{ width:172, flexShrink:0 }}>
+        <div style={{ fontSize:10, fontWeight:700, color:'#9CA3AF', textTransform:'uppercase', letterSpacing:1, marginBottom:8 }}>Pages</div>
+        {PAGE_NAMES.map(p => (
+          <div key={p} onClick={() => setActivePage(p)} style={{
+            padding:'8px 12px', borderRadius:6, cursor:'pointer', fontSize:12, fontWeight: activePage===p ? 700 : 500,
+            color: activePage===p ? '#1A1F8F' : '#4B5563', background: activePage===p ? '#EEF2FF' : 'transparent',
+            marginBottom:2, transition:'all 0.12s'
+          }}>{p}</div>
+        ))}
+      </div>
+
+      {/* Form */}
+      <div style={{ flex:1 }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20 }}>
+          <div style={{ fontFamily:"'League Spartan', sans-serif", fontSize:22, fontWeight:800, color:'#1A1F8F' }}>{activePage}</div>
+          <button style={S.btn('#2AAB47')} onClick={() => onToast('Changes auto-saved')}>✓ Saved</button>
+        </div>
+        {schema.map(({ section, fields }) => (
+          <div key={section} style={S.card}>
+            <div style={{ fontSize:11, fontWeight:700, color:'#1A1F8F', textTransform:'uppercase', letterSpacing:0.9, borderBottom:'2px solid #F5C400', paddingBottom:6, marginBottom:16 }}>{section}</div>
+            {fields.map(([key, label]) => (
+              <Field key={key} label={label} value={pageData[key]||''} onChange={v => setField(key, v)} multi={isLong(key)} />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── PROGRAMS SECTION ─────────────────────────────────────────────────────────
+function ProgramsSection({ programs, onChange, onToast }) {
+  const [editing, setEditing] = useState(null);
+  const [draft, setDraft] = useState('');
+
+  function startEdit(p) { setEditing(p.id); setDraft(p.description); }
+  function saveEdit(p) {
+    onChange(programs.map(pr => pr.id === p.id ? {...pr, description: draft} : pr));
+    setEditing(null); onToast('Program updated');
+  }
+
+  return (
+    <div>
+      <div style={{ marginBottom:20 }}>
+        <div style={{ fontFamily:"'League Spartan', sans-serif", fontSize:22, fontWeight:800, color:'#1A1F8F' }}>Programs</div>
+        <div style={{ fontSize:12, color:'#6B7280', marginTop:2 }}>Edit descriptions — program names, ages, and schedules are managed in the codebase.</div>
+      </div>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(320px, 1fr))', gap:16 }}>
+        {programs.map(p => (
+          <div key={p.id} style={{ ...S.card, borderLeft:`4px solid ${p.color}`, padding:0, overflow:'hidden' }}>
+            <div style={{ padding:'14px 16px 10px', borderBottom:'1px solid #F3F4F6' }}>
+              <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                <div style={{ width:10, height:10, borderRadius:'50%', background:p.color, flexShrink:0 }}></div>
+                <div style={{ fontFamily:"'League Spartan', sans-serif", fontSize:16, fontWeight:800, color:'#1A1A2E' }}>{p.name}</div>
+              </div>
+              <div style={{ fontSize:11, color:'#9CA3AF', marginTop:4, paddingLeft:20 }}>Ages {p.ages} · {p.schedule}</div>
+            </div>
+            <div style={{ padding:'12px 16px' }}>
+              {editing === p.id ? (
+                <div>
+                  <textarea style={{...S.textarea, fontSize:12, minHeight:60}} value={draft} onChange={e=>setDraft(e.target.value)} />
+                  <div style={{ display:'flex', gap:8, marginTop:6 }}>
+                    <button style={{...S.btn('#1A1F8F'), padding:'5px 12px', fontSize:11}} onClick={() => saveEdit(p)}>Save</button>
+                    <button style={{...S.btn('#6B7280', true), padding:'5px 12px', fontSize:11}} onClick={() => setEditing(null)}>Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p style={{ fontSize:12, color:'#4B5563', lineHeight:1.55, marginBottom:10 }}>{p.description}</p>
+                  <div style={{ marginBottom:8 }}>
+                    {p.subPrograms.map((sp,i) => <div key={i} style={{ fontSize:11, color:'#6B7280', padding:'2px 0' }}>· {sp}</div>)}
+                  </div>
+                  <button style={{...S.btn('#1A1F8F', true), padding:'5px 12px', fontSize:11}} onClick={() => startEdit(p)}>✏ Edit Description</button>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── ORG INFO SECTION ─────────────────────────────────────────────────────────
+function OrgSection({ org, onChange, onToast }) {
+  const sections = [
+    { title:'Identity', fields:[['name','Legal Name'],['nickname','Short Name / Abbreviation'],['type','Organization Type'],['founded','Founded Year'],['tagline','Tagline'],['mission','Mission Phrase']] },
+    { title:'Contact & Location', fields:[['address','Address'],['phone','Phone'],['email','Email'],['website','Website']] },
+    { title:'Hours', fields:[['hours_weekdays','Weekday Hours'],['hours_sunday','Sunday Hours']] },
+    { title:'Partners & Stats', fields:[['partner','Partner Organization'],['stat_1_num','Stat 1 Number'],['stat_1_label','Stat 1 Label'],['stat_2_num','Stat 2 Number'],['stat_2_label','Stat 2 Label'],['stat_3_num','Stat 3 Number'],['stat_3_label','Stat 3 Label']] }
+  ];
+
+  function set(k, v) { onChange({...org, [k]:v}); }
+
+  return (
+    <div>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20 }}>
+        <div style={{ fontFamily:"'League Spartan', sans-serif", fontSize:22, fontWeight:800, color:'#1A1F8F' }}>Organization Info</div>
+        <button style={S.btn('#2AAB47')} onClick={() => onToast('Org info saved')}>✓ Saved</button>
+      </div>
+      {sections.map(({ title, fields }) => (
+        <div key={title} style={S.card}>
+          <div style={{ fontSize:11, fontWeight:700, color:'#1A1F8F', textTransform:'uppercase', letterSpacing:0.9, borderBottom:'2px solid #F5C400', paddingBottom:6, marginBottom:16 }}>{title}</div>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+            {fields.map(([k,label]) => (
+              <div key={k} style={{ gridColumn: k === 'address' ? 'span 2' : 'auto' }}>
+                <Field label={label} value={org[k]||''} onChange={v => set(k,v)} />
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── APP ──────────────────────────────────────────────────────────────────────
+function App() {
+  const [data, setData] = useData();
+  const [section, setSection] = useState('events');
+  const [toast, setToast] = useState(null);
+  const toastTimer = useRef(null);
+
+  function showToast(msg) {
+    setToast(msg);
+    clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(null), 2200);
+  }
+
+  const navItems = [
+    { id:'events', label:'Events' },
+    { id:'programs', label:'Programs' },
+    { id:'pages', label:'Page Content', group:'Pages' },
+    { id:'org', label:'Org Info', group:'Settings' }
+  ];
+
+  const sectionTitles = { events:'Events', programs:'Programs', pages:'Page Content', org:'Org Info' };
+
+  return (
+    <div style={S.app}>
+      {/* Sidebar */}
+      <div style={S.sidebar}>
+        <div style={S.sidebarHeader}>
+          <div style={S.sidebarLogo}>H·E·S</div>
+          <div style={S.sidebarSub}>Content Manager</div>
+        </div>
+        <div style={S.nav}>
+          {navItems.map((item, i) => {
+            const prev = navItems[i-1];
+            const showGroup = item.group && (!prev || prev.group !== item.group);
+            return (
+              <div key={item.id}>
+                {showGroup && <div style={S.navGroup}>{item.group}</div>}
+                <NavItem label={item.label} active={section===item.id} onClick={() => setSection(item.id)} />
+              </div>
+            );
+          })}
+        </div>
+        <div style={{ padding:'16px 20px', borderTop:'1px solid rgba(255,255,255,0.1)', fontSize:10, color:'rgba(255,255,255,0.3)', lineHeight:1.5 }}>
+          Changes save automatically<br/>to this browser's memory.
+        </div>
+      </div>
+
+      {/* Main */}
+      <div style={S.main}>
+        <div style={S.topbar}>
+          <div style={S.topTitle}>{sectionTitles[section]}</div>
+          <div style={{ fontSize:11, color:'#9CA3AF', fontWeight:500 }}>
+            thehes.org · Content Manager
+          </div>
+        </div>
+        <div style={S.content}>
+          {section === 'events' &&
+            <EventsSection events={data.events}
+              onChange={ev => setData(d => ({...d, events:ev}))}
+              onToast={showToast} />}
+          {section === 'programs' &&
+            <ProgramsSection programs={data.programs}
+              onChange={pr => setData(d => ({...d, programs:pr}))}
+              onToast={showToast} />}
+          {section === 'pages' &&
+            <PagesSection pages={data.pages}
+              onChange={pg => setData(d => ({...d, pages:pg}))}
+              onToast={showToast} />}
+          {section === 'org' &&
+            <OrgSection org={data.org}
+              onChange={o => setData(d => ({...d, org:o}))}
+              onToast={showToast} />}
+        </div>
+      </div>
+
+      {toast && <Toast msg={toast} />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>H.E.S. Master Content Sync — Flat Tables</title>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;800;900&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 32px 40px 80px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    background: #f4f5fb;
+    color: #0d1070;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Cover ── */
+  .cover {
+    background: #1A1F8F;
+    color: #fff;
+    border-radius: 12px;
+    padding: 32px 40px 28px;
+    margin-bottom: 36px;
+    border-bottom: 5px solid #F5C400;
+  }
+  .cover-eye { font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #F5C400; margin-bottom: 6px; }
+  .cover h1 { font-family: 'League Spartan', sans-serif; font-size: 30px; font-weight: 900; margin: 0 0 6px; color: #fff; }
+  .cover p { color: rgba(255,255,255,.65); font-size: 13px; margin: 0; }
+  .cover-meta { display: flex; gap: 28px; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.15); font-size: 11px; color: rgba(255,255,255,.5); }
+  .cover-meta strong { color: #F5C400; }
+
+  /* ── Section header ── */
+  .section-label {
+    display: flex; align-items: center; gap: 10px;
+    background: #1A1F8F; color: #fff;
+    font-family: 'League Spartan', sans-serif;
+    font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    padding: 10px 16px; border-radius: 8px;
+    margin: 36px 0 14px;
+  }
+  .section-label .num {
+    background: #F5C400; color: #1A1F8F;
+    font-size: 11px; font-weight: 900;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .section-note { font-size: 12px; color: #555; margin: -6px 0 14px; line-height: 1.6; }
+
+  /* ── Tables ── */
+  .tbl-wrap { overflow-x: auto; margin-bottom: 28px; border-radius: 10px; box-shadow: 0 2px 12px rgba(13,16,112,.10); }
+  table { width: 100%; border-collapse: collapse; background: #fff; font-size: 12px; }
+  thead tr { background: #1A1F8F; }
+  thead th {
+    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 10px;
+    letter-spacing: .07em; text-transform: uppercase;
+    color: #fff; padding: 10px 12px; text-align: left;
+    border-right: 1px solid rgba(255,255,255,.12);
+    white-space: nowrap;
+  }
+  thead th:last-child { border-right: none; }
+  tbody tr:nth-child(even) { background: #f7f8fd; }
+  tbody td {
+    padding: 9px 12px; border-bottom: 1px solid #e8eaf6;
+    border-right: 1px solid #eef; vertical-align: top;
+    line-height: 1.5; color: #1a1a4a;
+  }
+  tbody td:last-child { border-right: none; }
+  tbody tr:last-child td { border-bottom: none; }
+  .td-key { font-family: 'Courier New', monospace; font-size: 11px; color: #1A1F8F; font-weight: 700; white-space: nowrap; }
+  .td-num { font-weight: 700; color: #1A1F8F; text-align: center; }
+  .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 20px;
+    font-size: 10px; font-weight: 700; letter-spacing: .05em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .pill-green  { background: #dcfce7; color: #166534; }
+  .pill-yellow { background: #fef9c3; color: #854d0e; }
+  .pill-red    { background: #fee2e2; color: #991b1b; }
+  .pill-blue   { background: #dbeafe; color: #1e40af; }
+  .pill-gray   { background: #f1f5f9; color: #475569; }
+  .sublist { margin: 0; padding: 0 0 0 14px; color: #3a3a7a; }
+  .sublist li { margin-bottom: 2px; }
+
+  /* ── Markdown block ── */
+  .md-toggle { margin-top: 8px; }
+  details { background: #fff; border: 1px solid #dde; border-radius: 8px; margin-bottom: 20px; }
+  summary {
+    cursor: pointer; padding: 10px 16px;
+    font-weight: 700; font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
+    color: #1A1F8F; user-select: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+  summary::before { content: '{ }'; font-family: monospace; background: #F5C400; color: #1A1F8F; padding: 1px 6px; border-radius: 4px; font-size: 10px; }
+  pre {
+    margin: 0; padding: 16px;
+    background: #0f1240; color: #e8e8ff;
+    font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.65;
+    overflow-x: auto; border-radius: 0 0 8px 8px;
+    border-top: 1px solid #dde;
+    white-space: pre;
+  }
+
+  /* ── Warning callout ── */
+  .callout {
+    border-left: 4px solid #F5C400; background: #fffbe6;
+    padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 0 0 20px;
+    font-size: 12px; line-height: 1.6;
+  }
+  .callout strong { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 3px; color: #1A1F8F; }
+  .callout-red { border-color: #E8363A; background: #fff5f5; }
+
+  h2 { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; color: #1A1F8F; margin: 24px 0 6px; }
+  a { color: #1A1F8F; }
+  @media (max-width: 900px) { body { padding: 16px; } }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-eye">Hebrew Educational Society · AI Brand Brain Initiative</div>
+  <h1>Master Content Sync — Flat Tables</h1>
+  <p>Horizontal, human-readable restructure of the SSOT Master Sheet. Each section below is a clean flat table (one row per entity) plus a collapsible Markdown block ready to paste into Excel or Notion.</p>
+  <div class="cover-meta">
+    <div><strong>Source:</strong> H.E.S. Master Content Sync.xlsx</div>
+    <div><strong>Sheets:</strong> Org · HeroSlides · Programs · Events · SubPrograms</div>
+    <div><strong>Generated:</strong> July 2026</div>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>How to use</strong>
+  Each table below = one Excel tab. Click "↓ Markdown" to expand the copy-paste-ready text. Paste into Excel then use <strong>Data → Text to Columns → Delimited by |</strong> to split into cells, or paste into Google Sheets using <strong>File → Import</strong>.
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label"><span class="num">1</span> ORG — Organization Identity</div>
+<p class="section-note">One row. All organization-level facts. Edit here first — all channels inherit these values.</p>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>Name</th><th>Nickname</th><th>Type</th><th>Founded</th><th>Years Serving</th>
+    <th>Address</th><th>City / Borough</th><th>Phone</th><th>Website</th>
+    <th>Hours (Weekdays)</th><th>Tagline</th><th>Mission Phrase</th>
+    <th>Families Served</th><th>Program Count</th><th>Population Served</th>
+  </tr></thead>
+  <tbody><tr>
+    <td><strong>Hebrew Educational Society</strong></td>
+    <td>H.E.S.</td>
+    <td>Jewish Community Center (JCC)</td>
+    <td>1899</td>
+    <td>100+</td>
+    <td>9502 Seaview Avenue</td>
+    <td>Canarsie, Brooklyn, NY 11236</td>
+    <td>(718) 241-3000</td>
+    <td>thehes.org</td>
+    <td>Monday – Friday</td>
+    <td>YOUR Community Center</td>
+    <td>neighbors helping neighbors</td>
+    <td>5,000+</td>
+    <td>20+</td>
+    <td>All ages, infants to seniors · inclusive programming for all abilities</td>
+  </tr></tbody>
+</table>
+</div>
+
+<details class="md-toggle"><summary>↓ Markdown — Copy to paste into Excel</summary>
+<pre>| Name | Nickname | Type | Founded | Years Serving | Address | City / Borough | Phone | Website | Hours (Weekdays) | Tagline | Mission Phrase | Families Served | Program Count | Population Served |
+|------|----------|------|---------|---------------|---------|----------------|-------|---------|------------------|---------|----------------|-----------------|---------------|-------------------|
+| Hebrew Educational Society | H.E.S. | Jewish Community Center (JCC) | 1899 | 100+ | 9502 Seaview Avenue | Canarsie, Brooklyn, NY 11236 | (718) 241-3000 | thehes.org | Monday – Friday | YOUR Community Center | neighbors helping neighbors | 5,000+ | 20+ | All ages, infants to seniors · inclusive programming for all abilities |</pre>
+</details>
+
+
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label"><span class="num">2</span> HERO SLIDES — Homepage Hero Carousel</div>
+<p class="section-note">One row per slide. Controls what appears in the homepage hero banner.</p>
+
+<div class="callout callout-red">
+  <strong>⚠ Missing data flagged</strong>
+  Slide dates/expiry, body copy for Slide 2, and secondary CTA for Slide 1 are blank in the source sheet. Fill these in before publishing.
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>#</th><th>Active</th><th>Theme / Headline</th><th>Eyebrow</th><th>Body Description</th>
+    <th>Primary CTA Label</th><th>Primary CTA URL</th>
+    <th>Secondary CTA Label</th><th>Secondary CTA URL</th><th>Expiry Date</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td class="td-num">1</td>
+      <td><span class="pill pill-green">Active</span></td>
+      <td>A century of neighbors helping neighbors.</td>
+      <td>YOUR Community Center · Brooklyn, NY</td>
+      <td>From early childhood through senior services — H.E.S. has been Brooklyn's community anchor for over 100 years.</td>
+      <td>Explore Programs</td><td>#programs</td>
+      <td>About H.E.S.</td><td>#</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td class="td-num">2</td>
+      <td><span class="pill pill-green">Active</span></td>
+      <td>Summer Camp 2026 is now open.</td>
+      <td>Registration Open · Limited Spots</td>
+      <td>June 29 – August 19. Swim, arts, karate, STEM, day &amp; overnight trips. Camp Xtra supports children with disabilities.</td>
+      <td>Register Now</td><td>#camp</td>
+      <td>Camp Activities</td><td>#camp-activities</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td class="td-num">3</td>
+      <td><span class="pill pill-red">Inactive</span></td>
+      <td>Annual Street Fair. Music, food, the whole block.</td>
+      <td>[blank — fill in]</td>
+      <td>[blank — fill in]</td>
+      <td>Event Details</td><td>#</td>
+      <td>Become a Sponsor</td><td>#</td>
+      <td>—</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<details class="md-toggle"><summary>↓ Markdown — Copy to paste into Excel</summary>
+<pre>| # | Active | Theme / Headline | Eyebrow | Body Description | Primary CTA Label | Primary CTA URL | Secondary CTA Label | Secondary CTA URL | Expiry Date |
+|---|--------|-----------------|---------|-----------------|-------------------|-----------------|---------------------|-------------------|-------------|
+| 1 | Yes | A century of neighbors helping neighbors. | YOUR Community Center · Brooklyn, NY | From early childhood through senior services — H.E.S. has been Brooklyn's community anchor for over 100 years. | Explore Programs | #programs | About H.E.S. | # | — |
+| 2 | Yes | Summer Camp 2026 is now open. | Registration Open · Limited Spots | June 29 – August 19. Swim, arts, karate, STEM, day &amp; overnight trips. Camp Xtra supports children with disabilities. | Register Now | #camp | Camp Activities | #camp-activities | — |
+| 3 | No | Annual Street Fair. Music, food, the whole block. | [fill in] | [fill in] | Event Details | # | Become a Sponsor | # | — |</pre>
+</details>
+
+
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label"><span class="num">3</span> PROGRAMS — Top-Level Program Catalog</div>
+<p class="section-note">One row per program. These are the 8 main program tiles shown on the homepage.</p>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>Program</th><th>Ages</th><th>Audience</th><th>Schedule</th>
+    <th>Sub-Programs</th><th>Key Activities / Features</th>
+    <th>Photo URL</th><th>Accent Color</th><th>Status</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Summer Camp</strong></td>
+      <td>Ages 4 – 16</td>
+      <td>School-age children</td>
+      <td>June 29 – Aug 19, 2026 · 8 AM–6 PM</td>
+      <td><ul class="sublist"><li>Day Camp (4–12)</li><li>Teen Unit (13–16)</li><li>Camp Xtra (inclusive)</li><li>Vacation Program</li></ul></td>
+      <td>Swimming, Sports, Arts &amp; Crafts, STEM, Day Trips, Overnight Trips</td>
+      <td style="font-size:10px; word-break:break-all;">thehes.org/wp-content/uploads/2025/12/IMG_0409-2-scaled.jpg</td>
+      <td><span style="display:inline-block;width:14px;height:14px;background:#F26522;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>#F26522</td>
+      <td><span class="pill pill-green">Active</span></td>
+    </tr>
+    <tr>
+      <td><strong>Aquatics</strong></td>
+      <td>All ages</td>
+      <td>All ages &amp; skill levels</td>
+      <td>Year-round</td>
+      <td><ul class="sublist"><li>Group Swim Lessons</li><li>Private Swim Lessons</li><li>Open Recreational Swim</li><li>Fitness Lap Swim</li><li>Parent &amp; Tot Water Classes</li></ul></td>
+      <td>Beginner through advanced · group + private · indoor pool</td>
+      <td style="font-size:10px; word-break:break-all;">thehes.org/wp-content/uploads/2025/08/DSC09364-2-scaled.jpg</td>
+      <td><span style="display:inline-block;width:14px;height:14px;background:#3DB8F5;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>#3DB8F5</td>
+      <td><span class="pill pill-green">Active</span></td>
+    </tr>
+    <tr>
+      <td><strong>Early Childhood</strong></td>
+      <td>Ages 2.5 – 5</td>
+      <td>Toddlers &amp; Pre-K</td>
+      <td>All school year · Mon–Fri</td>
+      <td><ul class="sublist"><li>Preschool Classroom</li><li>Instructional Gym</li><li>Music &amp; Movement</li><li>Arts &amp; Crafts</li></ul></td>
+      <td>Play-based · kindergarten readiness · motor skills · creativity</td>
+      <td style="font-size:10px; word-break:break-all;">thehes.org/wp-content/uploads/2020/08/…</td>
+      <td><span style="display:inline-block;width:14px;height:14px;background:#1FB59C;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>#1FB59C</td>
+      <td><span class="pill pill-green">Active</span></td>
+    </tr>
+    <tr>
+      <td><strong>Sports &amp; Fitness</strong></td>
+      <td>Youth + Adults</td>
+      <td>Adults and youth</td>
+      <td>Year-round · throughout the week</td>
+      <td><ul class="sublist"><li>Fitness Center (gym + sauna)</li><li>Yoga</li><li>Zumba</li><li>Cardio Kickboxing</li><li>Basketball League</li><li>Soccer League</li><li>Martial Arts</li></ul></td>
+      <td>Full gym, sauna, instructor-led classes, youth sports leagues</td>
+      <td style="font-size:10px; word-break:break-all;">thehes.org/wp-content/uploads/2019/02/HES-Bball-626x462.jpg</td>
+      <td><span style="display:inline-block;width:14px;height:14px;background:#E8363A;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>#E8363A</td>
+      <td><span class="pill pill-green">Active</span></td>
+    </tr>
+    <tr>
+      <td><strong>Disability Services</strong></td>
+      <td>Ages 4 – 16</td>
+      <td>Children &amp; adults with disabilities</td>
+      <td>Year-round (after school + summer)</td>
+      <td><ul class="sublist"><li>R.A.P. Room After-School</li><li>Camp Xtra Summer</li><li>Family Support &amp; Caregiver Resources</li></ul></td>
+      <td>Fully inclusive &amp; integrated · IEP navigation · caregiver support</td>
+      <td style="font-size:10px; word-break:break-all;">thehes.org/wp-content/uploads/2025/08/Untitled-design-8-1.png</td>
+      <td><span style="display:inline-block;width:14px;height:14px;background:#2AAB47;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>#2AAB47</td>
+      <td><span class="pill pill-green">Active</span></td>
+    </tr>
+    <tr>
+      <td><strong>Music School</strong></td>
+      <td>All ages</td>
+      <td>All ages &amp; levels</td>
+      <td>Year-round</td>
+      <td><ul class="sublist"><li>Private Lessons</li><li>All Ages &amp; Levels</li><li>Recitals &amp; Ensembles</li></ul></td>
+      <td>Piano, Guitar, Drums, Voice · beginner through advanced · performance opportunities</td>
+      <td style="font-size:10px; word-break:break-all;">thehes.org/wp-content/uploads/2023/08/DSC_0349-2-scaled.jpg</td>
+      <td><span style="display:inline-block;width:14px;height:14px;background:#8E4FB8;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>#8E4FB8</td>
+      <td><span class="pill pill-green">Active</span></td>
+    </tr>
+    <tr>
+      <td><strong>After School</strong></td>
+      <td>Ages 4–14 (ASP) · 13–19 (TLC)</td>
+      <td>K–12 students &amp; teens</td>
+      <td>Mon–Fri · 3:30–6:00 PM</td>
+      <td><ul class="sublist"><li>After School Program (4–14)</li><li>Teen Leadership Council (13–19)</li></ul></td>
+      <td>Homework help · life skills · social-emotional dev · college prep · FREE for TLC</td>
+      <td style="font-size:10px; word-break:break-all;">thehes.org/wp-content/uploads/2025/08/DSC04986-1-scaled.jpg</td>
+      <td><span style="display:inline-block;width:14px;height:14px;background:#F5C400;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>#F5C400</td>
+      <td><span class="pill pill-green">Active</span></td>
+    </tr>
+    <tr>
+      <td><strong>Social Services</strong></td>
+      <td>All ages</td>
+      <td>All community members</td>
+      <td>Year-round</td>
+      <td><ul class="sublist"><li>Food Pantry</li><li>Benefits &amp; Entitlements Navigation</li><li>Senior Adult Program</li><li>Community Health &amp; Prevention</li></ul></td>
+      <td>Food support · SNAP/SSI/Medicaid · senior activities · OASAS prevention · online ordering</td>
+      <td style="font-size:10px; word-break:break-all;">thehes.org/wp-content/uploads/2025/08/DSC07709-1-scaled.jpg</td>
+      <td><span style="display:inline-block;width:14px;height:14px;background:#0D1070;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>#0D1070</td>
+      <td><span class="pill pill-green">Active</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<details class="md-toggle"><summary>↓ Markdown — Copy to paste into Excel</summary>
+<pre>| Program | Ages | Audience | Schedule | Sub-Programs | Key Activities / Features | Accent Color | Status |
+|---------|------|----------|----------|--------------|--------------------------|--------------|--------|
+| Summer Camp | Ages 4–16 | School-age children | June 29–Aug 19 · 8 AM–6 PM | Day Camp (4–12) · Teen Unit (13–16) · Camp Xtra (inclusive) · Vacation Program | Swimming · Sports · Arts &amp; Crafts · STEM · Day Trips · Overnight Trips | #F26522 | Active |
+| Aquatics | All ages | All ages &amp; skill levels | Year-round | Group Swim Lessons · Private Swim Lessons · Open Recreational Swim · Fitness Lap Swim · Parent &amp; Tot Water Classes | Beginner–advanced · group + private · indoor pool | #3DB8F5 | Active |
+| Early Childhood | Ages 2.5–5 | Toddlers &amp; Pre-K | All school year · Mon–Fri | Preschool Classroom · Instructional Gym · Music &amp; Movement · Arts &amp; Crafts | Play-based · kindergarten readiness · motor skills | #1FB59C | Active |
+| Sports &amp; Fitness | Youth + Adults | Adults and youth | Year-round | Fitness Center · Yoga · Zumba · Cardio Kickboxing · Basketball League · Soccer League · Martial Arts | Full gym · sauna · instructor-led classes · youth sports leagues | #E8363A | Active |
+| Disability Services | Ages 4–16 | Children &amp; adults with disabilities | Year-round | R.A.P. Room After-School · Camp Xtra Summer · Family Support &amp; Caregiver Resources | Fully inclusive · IEP navigation · caregiver support | #2AAB47 | Active |
+| Music School | All ages | All ages &amp; levels | Year-round | Private Lessons · All Ages &amp; Levels · Recitals &amp; Ensembles | Piano · Guitar · Drums · Voice · recitals | #8E4FB8 | Active |
+| After School | Ages 4–14 / 13–19 | K–12 &amp; teens | Mon–Fri · 3:30–6 PM | After School Program (4–14) · Teen Leadership Council (13–19) | Homework help · life skills · college prep · TLC free | #F5C400 | Active |
+| Social Services | All ages | All community members | Year-round | Food Pantry · Benefits Navigation · Senior Adult Program · Community Health &amp; Prevention | Food support · SNAP/SSI/Medicaid · senior activities · OASAS prevention | #0D1070 | Active |</pre>
+</details>
+
+
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label"><span class="num">4</span> SUBPROGRAMS — Detailed Sub-Program Catalog</div>
+<p class="section-note">One row per sub-program across all categories. This is the richest data layer — drives individual program detail pages.</p>
+
+<div class="callout callout-red">
+  <strong>⚠ Entity name inconsistency found in source sheet</strong>
+  Social Services sub-programs are stored under <strong>"Social Service"</strong> (singular) in the SubPrograms tab but <strong>"Social Services"</strong> (plural) in the Programs tab. Standardize to "Social Services" in both tabs to prevent lookup failures.
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>Category</th><th>Sub-Program</th><th>Ages</th><th>Schedule / Hours</th>
+    <th>Summary (one sentence)</th><th>Cost</th><th>How to Register / Access</th>
+  </tr></thead>
+  <tbody>
+    <!-- Summer Camp -->
+    <tr><td rowspan="4" style="font-weight:700;color:#F26522;vertical-align:top;white-space:nowrap;">Summer Camp</td>
+      <td>Day Camp</td><td>4–12 yrs</td><td>Jun 29–Aug 19 · 8 AM–6 PM (extended care avail.)</td>
+      <td>Ages 4–12 spend their summer swimming, playing sports, making art, and going on day trips.</td>
+      <td>See registration portal</td><td>thehes.org or call (718) 241-3000</td></tr>
+    <tr><td>Teen Unit</td><td>13–16 yrs</td><td>Jun 29–Aug 19</td>
+      <td>Purpose-built for 13–16: leadership challenges, adventure activities, and real travel — enrollment limited.</td>
+      <td>See registration portal</td><td>Call early — limited spots: (718) 241-3000</td></tr>
+    <tr><td>Camp Xtra (Inclusive)</td><td>4–16 yrs with disabilities</td><td>Jun 29–Aug 19 · 8 AM–6 PM</td>
+      <td>Children with disabilities join Day Camp fully — same activities, same friends, same summer, no separate track.</td>
+      <td>See registration portal</td><td>Spots limited — call (718) 241-3000 early</td></tr>
+    <tr><td>Vacation Program</td><td>4–16 yrs</td><td>All NYC school holiday recesses · 8 AM–6 PM</td>
+      <td>Full-day supervised coverage on every NYC school holiday recess — recreation, arts, and enrichment.</td>
+      <td>See registration portal</td><td>thehes.org or call (718) 241-3000</td></tr>
+    <!-- Aquatics -->
+    <tr><td rowspan="5" style="font-weight:700;color:#3DB8F5;vertical-align:top;white-space:nowrap;">Aquatics</td>
+      <td>Group Swim Lessons</td><td>All ages</td><td>Multi-week blocks · year-round</td>
+      <td>Structured group instruction for all ages — beginner through advanced — with certified H.E.S. instructors.</td>
+      <td>See front desk for current rates</td><td>Call (718) 241-3000 or visit Aquatics desk</td></tr>
+    <tr><td>Private Swim Lessons</td><td>All ages</td><td>By appointment</td>
+      <td>One-on-one instruction paced to the individual swimmer's goals — ideal for beginners, technique, or competitive prep.</td>
+      <td>See front desk for current rates</td><td>Call (718) 241-3000 or visit Aquatics desk</td></tr>
+    <tr><td>Open Recreational Swim</td><td>All ages</td><td>Posted at Aquatics desk · drop-in</td>
+      <td>Drop-in open swim for members and day-pass guests during designated hours — no registration needed.</td>
+      <td>Included with membership · day pass at desk</td><td>Walk in during posted open swim hours</td></tr>
+    <tr><td>Fitness Lap Swim</td><td>Adults</td><td>12:00 PM – 1:00 PM · Aquatics Pool</td>
+      <td>Dedicated lap lanes for adult fitness swimming — structured for cardio conditioning.</td>
+      <td>Included with membership · day pass avail.</td><td>Walk in during posted hours</td></tr>
+    <tr><td>Parent &amp; Tot Water Classes</td><td>6 months+ (with parent)</td><td>Session-based · year-round</td>
+      <td>Gentle water-confidence classes for infants/toddlers — parent in the water every session.</td>
+      <td>See front desk for current rates</td><td>Call (718) 241-3000 or visit Aquatics desk</td></tr>
+    <!-- Early Childhood -->
+    <tr><td rowspan="4" style="font-weight:700;color:#1FB59C;vertical-align:top;white-space:nowrap;">Early Childhood</td>
+      <td>Preschool Classroom</td><td>2.5–5 yrs</td><td>Mon–Fri · AM &amp; PM sessions available</td>
+      <td>Play-based early learning for ages 2.5–5 — builds literacy, numeracy, and social skills for kindergarten readiness.</td>
+      <td>See front desk (subsidy programs accepted)</td><td>Call (718) 241-3000 or visit front desk</td></tr>
+    <tr><td>Instructional Gym</td><td>2.5–5 yrs</td><td>Weekly · school year</td>
+      <td>Weekly movement classes in a cushioned gymnasium — builds balance, coordination, and gross motor skills.</td>
+      <td>Included with Early Childhood enrollment</td><td>Call (718) 241-3000</td></tr>
+    <tr><td>Music &amp; Movement</td><td>2.5–5 yrs</td><td>Weekly · school year</td>
+      <td>Songs, rhythm instruments, and guided movement — develops listening, coordination, and early musical awareness.</td>
+      <td>Included with Early Childhood enrollment</td><td>Call (718) 241-3000</td></tr>
+    <tr><td>Arts &amp; Crafts</td><td>2.5–5 yrs</td><td>Weekly · school year</td>
+      <td>Hands-on projects with paint, clay, and mixed media — builds creativity and fine motor skills.</td>
+      <td>Included with Early Childhood enrollment</td><td>Call (718) 241-3000</td></tr>
+    <!-- Sports & Fitness -->
+    <tr><td rowspan="7" style="font-weight:700;color:#E8363A;vertical-align:top;white-space:nowrap;">Sports &amp; Fitness</td>
+      <td>Fitness Center (gym + sauna)</td><td>Adults</td><td>Year-round · see posted hours</td>
+      <td>Full adult gym with cardio machines, free weights, resistance equipment, and an on-site sauna.</td>
+      <td>Membership or day pass</td><td>Call (718) 241-3000 for current rates</td></tr>
+    <tr><td>Yoga</td><td>Adults (all levels)</td><td>10:00–11:00 AM · Studio B</td>
+      <td>Instructor-led yoga for adults of all experience levels — flexibility, strength, and stress relief.</td>
+      <td>Included with membership · day pass welcome</td><td>Walk in · bring comfortable clothes (mats available)</td></tr>
+    <tr><td>Zumba</td><td>Adults (all levels)</td><td>Check front desk for current day/time · Studio A</td>
+      <td>High-energy dance-cardio combining Latin rhythms and easy-to-follow moves — full-body workout.</td>
+      <td>Included with membership · day pass welcome</td><td>Check front desk for current schedule</td></tr>
+    <tr><td>Cardio Kickboxing</td><td>Adults (all levels)</td><td>Tue &amp; Thu · 7:00–8:30 PM · Studio A</td>
+      <td>Martial-arts-inspired aerobic class — builds cardio endurance, strength, and coordination.</td>
+      <td>Included with membership · day pass welcome</td><td>Walk in on Tuesday or Thursday</td></tr>
+    <tr><td>Basketball League</td><td>Ages 6–17</td><td>Season-based · age-group divisions</td>
+      <td>Coached youth basketball with structured practices and scheduled games — skills, teamwork, and sportsmanship.</td>
+      <td>See front desk for current registration fee</td><td>Call (718) 241-3000 or visit front desk</td></tr>
+    <tr><td>Soccer League</td><td>Ages 6–17</td><td>Season-based · age-group divisions</td>
+      <td>Coached youth soccer league — develops fundamentals, teamwork, and fitness through organized play.</td>
+      <td>See front desk for current registration fee</td><td>Call (718) 241-3000 or visit front desk</td></tr>
+    <tr><td>Martial Arts</td><td>School-age youth</td><td>Season-based · all skill levels</td>
+      <td>Structured youth martial arts — builds discipline, coordination, strength, and self-confidence.</td>
+      <td>See front desk for current registration fee</td><td>Call (718) 241-3000 or visit front desk</td></tr>
+    <!-- Disability Services -->
+    <tr><td rowspan="3" style="font-weight:700;color:#2AAB47;vertical-align:top;white-space:nowrap;">Disability Services</td>
+      <td>R.A.P. Room After-School</td><td>4–16 yrs with disabilities</td><td>Mon–Fri · 3:30–6:00 PM</td>
+      <td>Specialized after-school inclusion — academic support, social skills, and enrichment integrated alongside the mainstream program.</td>
+      <td>See front desk (subsidy programs accepted)</td><td>Call (718) 241-3000 or visit front desk</td></tr>
+    <tr><td>Camp Xtra Summer Inclusion</td><td>4–16 yrs with disabilities</td><td>Jun 29–Aug 19 · 8 AM–6 PM</td>
+      <td>Children with disabilities join H.E.S. Summer Camp fully — same activities, schedule, and peers as mainstream Day Camp.</td>
+      <td>See registration portal</td><td>Spots limited — call (718) 241-3000 early</td></tr>
+    <tr><td>Family Support &amp; Caregiver Resources</td><td>Families/caregivers of children with disabilities</td><td>Year-round · walk-in welcome</td>
+      <td>Free one-on-one guidance for caregivers navigating IEPs, disability benefits, and community resources.</td>
+      <td>Free</td><td>Walk in during business hours · ask for Social Services</td></tr>
+    <!-- After School -->
+    <tr><td rowspan="2" style="font-weight:700;color:#C39A00;vertical-align:top;white-space:nowrap;">After School</td>
+      <td>After School Program</td><td>4–14 yrs</td><td>Mon–Fri · 3:30–6:00 PM</td>
+      <td>Homework help, enrichment, life skills, and social-emotional development — supervised, structured, Monday through Friday.</td>
+      <td>See front desk (subsidy/vouchers accepted)</td><td>Call (718) 241-3000 or visit thehes.org</td></tr>
+    <tr><td>Teen Leadership Council (TLC)</td><td>13–19 yrs</td><td>Year-long · weekly sessions + events</td>
+      <td>Free, year-long leadership program covering life skills, college &amp; career prep, financial literacy, and community leadership.</td>
+      <td><strong>Free — no charge</strong></td><td>Call (718) 241-3000 or visit front desk</td></tr>
+    <!-- Social Services -->
+    <tr><td rowspan="4" style="font-weight:700;color:#0D1070;vertical-align:top;white-space:nowrap;">Social Services</td>
+      <td>Food Pantry</td><td>All community members</td><td>Mon–Fri · 9:30 AM–2:00 PM · H.E.S. Lobby</td>
+      <td>Free food distribution — online ordering at thehes.org, no eligibility requirements, no questions asked.</td>
+      <td><strong>Free</strong></td><td>Walk in or pre-order at thehes.org · call ext. 124</td></tr>
+    <tr><td>Benefits &amp; Entitlements Navigation</td><td>All community members</td><td>Year-round · walk-in &amp; appointments</td>
+      <td>Free one-on-one advocacy for SNAP, SSI, Medicaid, and housing assistance — advocates guide you through the full process.</td>
+      <td><strong>Free</strong></td><td>Walk in or call (718) 241-3000 · ask for Social Services</td></tr>
+    <tr><td>Senior Adult Program</td><td>Older adults in Canarsie</td><td>Year-round · ongoing</td>
+      <td>Social events, workshops, community trips, crisis intervention, and legal/financial consultations for older adults.</td>
+      <td>Free or low-cost</td><td>Visit front desk to connect with senior services coordinator</td></tr>
+    <tr><td>Community Health &amp; Prevention</td><td>Youth, families &amp; community</td><td>Year-round · workshop-based</td>
+      <td>Public health education and an OASAS-funded drug &amp; alcohol prevention program for the Canarsie community.</td>
+      <td><strong>Free</strong></td><td>Check front desk for upcoming workshop dates</td></tr>
+  </tbody>
+</table>
+</div>
+
+<details class="md-toggle"><summary>↓ Markdown — Copy to paste into Excel</summary>
+<pre>| Category | Sub-Program | Ages | Schedule / Hours | Summary | Cost | How to Register / Access |
+|----------|-------------|------|-----------------|---------|------|--------------------------|
+| Summer Camp | Day Camp | 4–12 yrs | Jun 29–Aug 19 · 8 AM–6 PM | Ages 4–12 spend their summer swimming, playing sports, making art, and going on day trips. | See registration portal | thehes.org or (718) 241-3000 |
+| Summer Camp | Teen Unit | 13–16 yrs | Jun 29–Aug 19 | Leadership challenges, adventure activities, and real travel — enrollment limited. | See registration portal | Call early — limited spots: (718) 241-3000 |
+| Summer Camp | Camp Xtra (Inclusive) | 4–16 yrs with disabilities | Jun 29–Aug 19 · 8 AM–6 PM | Children with disabilities join Day Camp fully — same activities, friends, summer, no separate track. | See registration portal | Spots limited — call (718) 241-3000 early |
+| Summer Camp | Vacation Program | 4–16 yrs | All NYC school holiday recesses · 8 AM–6 PM | Full-day supervised coverage on every NYC school holiday recess. | See registration portal | thehes.org or (718) 241-3000 |
+| Aquatics | Group Swim Lessons | All ages | Multi-week blocks · year-round | Structured group instruction for all ages — beginner through advanced. | See front desk | (718) 241-3000 or Aquatics desk |
+| Aquatics | Private Swim Lessons | All ages | By appointment | One-on-one instruction paced to the individual swimmer's goals. | See front desk | (718) 241-3000 or Aquatics desk |
+| Aquatics | Open Recreational Swim | All ages | Drop-in · posted hours | Drop-in open swim for members and day-pass guests — no registration needed. | Membership or day pass | Walk in during open swim hours |
+| Aquatics | Fitness Lap Swim | Adults | 12:00–1:00 PM daily | Dedicated lap lanes for adult fitness swimming and cardio conditioning. | Membership or day pass | Walk in during posted hours |
+| Aquatics | Parent &amp; Tot Water Classes | 6 months+ (with parent) | Session-based · year-round | Gentle water-confidence classes for infants/toddlers — parent in the water every session. | See front desk | (718) 241-3000 or Aquatics desk |
+| Early Childhood | Preschool Classroom | 2.5–5 yrs | Mon–Fri · AM &amp; PM sessions | Play-based early learning — literacy, numeracy, social-emotional skills for kindergarten readiness. | See front desk | (718) 241-3000 or front desk |
+| Early Childhood | Instructional Gym | 2.5–5 yrs | Weekly · school year | Movement classes in a cushioned gymnasium — balance, coordination, gross motor skills. | Included with enrollment | (718) 241-3000 |
+| Early Childhood | Music &amp; Movement | 2.5–5 yrs | Weekly · school year | Songs, rhythm instruments, and guided movement — listening, coordination, musical awareness. | Included with enrollment | (718) 241-3000 |
+| Early Childhood | Arts &amp; Crafts | 2.5–5 yrs | Weekly · school year | Hands-on projects with paint, clay, mixed media — creativity and fine motor skills. | Included with enrollment | (718) 241-3000 |
+| Sports &amp; Fitness | Fitness Center (gym + sauna) | Adults | Year-round | Full adult gym — cardio machines, free weights, resistance equipment, and on-site sauna. | Membership or day pass | (718) 241-3000 for current rates |
+| Sports &amp; Fitness | Yoga | Adults (all levels) | 10:00–11:00 AM · Studio B | Instructor-led yoga for adults — flexibility, strength, and stress relief. | Included with membership / day pass | Walk in · mats available |
+| Sports &amp; Fitness | Zumba | Adults (all levels) | Check front desk · Studio A | High-energy dance-cardio combining Latin rhythms and easy-to-follow moves. | Included with membership / day pass | Check front desk for current schedule |
+| Sports &amp; Fitness | Cardio Kickboxing | Adults (all levels) | Tue &amp; Thu · 7:00–8:30 PM · Studio A | Martial-arts-inspired aerobic class — cardio endurance, strength, and coordination. | Included with membership / day pass | Walk in Tue or Thu |
+| Sports &amp; Fitness | Basketball League | Ages 6–17 | Season-based | Coached youth basketball — skills, teamwork, and sportsmanship through structured play. | See front desk | (718) 241-3000 or front desk |
+| Sports &amp; Fitness | Soccer League | Ages 6–17 | Season-based | Coached youth soccer — fundamentals, teamwork, and fitness through organized play. | See front desk | (718) 241-3000 or front desk |
+| Sports &amp; Fitness | Martial Arts | School-age youth | Season-based | Structured youth martial arts — discipline, coordination, strength, and self-confidence. | See front desk | (718) 241-3000 or front desk |
+| Disability Services | R.A.P. Room After-School | 4–16 yrs with disabilities | Mon–Fri · 3:30–6:00 PM | Specialized after-school inclusion — academic support and enrichment integrated with mainstream program. | See front desk | (718) 241-3000 or front desk |
+| Disability Services | Camp Xtra Summer Inclusion | 4–16 yrs with disabilities | Jun 29–Aug 19 · 8 AM–6 PM | Children with disabilities join H.E.S. Summer Camp fully — same activities and peers as mainstream Day Camp. | See registration portal | Spots limited — (718) 241-3000 early |
+| Disability Services | Family Support &amp; Caregiver Resources | Families/caregivers | Year-round · walk-in welcome | Free one-on-one guidance for caregivers — IEPs, disability benefits, and community resources. | Free | Walk in or ask for Social Services |
+| After School | After School Program | 4–14 yrs | Mon–Fri · 3:30–6:00 PM | Homework help, enrichment, and social-emotional development — Monday through Friday. | See front desk | (718) 241-3000 or thehes.org |
+| After School | Teen Leadership Council (TLC) | 13–19 yrs | Year-long · weekly | Free year-long program — life skills, college prep, financial literacy, and community leadership. | FREE | (718) 241-3000 or front desk |
+| Social Services | Food Pantry | All community members | Mon–Fri · 9:30 AM–2:00 PM | Free food — online ordering at thehes.org, no eligibility requirements, no questions asked. | Free | thehes.org or ext. 124 |
+| Social Services | Benefits &amp; Entitlements Navigation | All community members | Year-round · walk-in &amp; appointments | Free one-on-one advocacy for SNAP, SSI, Medicaid, and housing assistance. | Free | Walk in or (718) 241-3000 |
+| Social Services | Senior Adult Program | Older adults | Year-round | Social events, workshops, trips, crisis intervention, and legal/financial consultations. | Free / low-cost | Visit front desk — ask for senior services |
+| Social Services | Community Health &amp; Prevention | Youth, families &amp; community | Year-round | Public health education and OASAS-funded drug &amp; alcohol prevention program. | Free | Check front desk for workshop dates |</pre>
+</details>
+
+
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label"><span class="num">5</span> EVENTS — Upcoming Community Events</div>
+<p class="section-note">One row per event. Add Publish Date + Expiry Date to control when each event appears on the website automatically.</p>
+
+<div class="callout callout-red">
+  <strong>⚠ Critical: Most date fields are blank in the source sheet</strong>
+  Event dates, times, and Valid Until fields are missing for nearly all events. Fill in columns D (Expiry Date) and C (Date) before the events tab will function correctly on the website.
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>Event Name</th><th>Month</th><th>Date (Display)</th><th>Time</th>
+    <th>Location</th><th>Admission</th><th>Highlights</th><th>Audience</th>
+    <th>Valid Until (Expiry)</th><th>Status</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Annual Street Fair 2026</strong></td>
+      <td>June</td><td>[fill in]</td><td>[fill in]</td>
+      <td>Seaview Avenue</td><td>Free</td>
+      <td>Live music · food carts · kids rides · raffles · demonstrations · bounce houses · community booths</td>
+      <td>Whole family</td><td>[fill in]</td>
+      <td><span class="pill pill-yellow">Date missing</span></td>
+    </tr>
+    <tr>
+      <td><strong>Summer Camp Opening Day</strong></td>
+      <td>June</td><td>June 29, 2026</td><td>8:30 AM</td>
+      <td>H.E.S. Main Building</td><td>Enrolled campers</td>
+      <td>Swimming · Arts · Sports · STEM · Day Trips · Camp Xtra welcomes every ability</td>
+      <td>Enrolled campers &amp; families</td><td>June 29, 2026</td>
+      <td><span class="pill pill-green">Active</span></td>
+    </tr>
+    <tr>
+      <td><strong>It Takes A Village · Family Tech</strong></td>
+      <td>July</td><td>[fill in]</td><td>[fill in]</td>
+      <td>Zoom + Main Hall (hybrid)</td><td>Free</td>
+      <td>Technology &amp; screen time · parents and families · It Takes A Village series</td>
+      <td>Parents &amp; families</td><td>[fill in]</td>
+      <td><span class="pill pill-yellow">Date missing</span></td>
+    </tr>
+    <tr>
+      <td><strong>Fall Festival</strong></td>
+      <td>October</td><td>October 14 · 1:00–5:00 PM</td><td>1:00 PM – 5:00 PM</td>
+      <td>H.E.S. Building</td><td>[fill in]</td>
+      <td>Decorations · Facilities &amp; Catering collaboration</td>
+      <td>Community</td><td>October 14, 2026</td>
+      <td><span class="pill pill-blue">Scheduled</span></td>
+    </tr>
+    <tr>
+      <td><strong>Thanksgiving Food Drive</strong></td>
+      <td>November</td><td>November 20–24</td><td>TBD</td>
+      <td>H.E.S. Building</td><td>Free / Donation</td>
+      <td>Food collection bins · volunteer registration · social media campaign</td>
+      <td>Community</td><td>November 24, 2026</td>
+      <td><span class="pill pill-blue">Scheduled</span></td>
+    </tr>
+    <tr>
+      <td><strong>Holiday Gala</strong></td>
+      <td>December</td><td>December 10 · 6:00–10:00 PM</td><td>6:00 PM – 10:00 PM</td>
+      <td>H.E.S. Building</td><td>Ticket sales / RSVP</td>
+      <td>Event program · posters · Facilities &amp; Catering &amp; Entertainment</td>
+      <td>Members &amp; community</td><td>December 10, 2026</td>
+      <td><span class="pill pill-blue">Scheduled</span></td>
+    </tr>
+    <tr>
+      <td><strong>Family Wellness Workshop</strong></td>
+      <td>January</td><td>January 15 · 10:00 AM–4:00 PM</td><td>10:00 AM – 4:00 PM</td>
+      <td>H.E.S. Building</td><td>Pre-registration required</td>
+      <td>Workshop materials · Social Services &amp; Facilities collaboration · email invitations</td>
+      <td>Families</td><td>January 15, 2027</td>
+      <td><span class="pill pill-blue">Scheduled</span></td>
+    </tr>
+    <tr>
+      <td><strong>Valentine's Community Dinner</strong></td>
+      <td>February</td><td>February 14 · 6:00–9:00 PM</td><td>6:00 PM – 9:00 PM</td>
+      <td>H.E.S. Building</td><td>[fill in]</td>
+      <td>[fill in event details]</td>
+      <td>Community</td><td>February 14, 2027</td>
+      <td><span class="pill pill-blue">Scheduled</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<details class="md-toggle"><summary>↓ Markdown — Copy to paste into Excel</summary>
+<pre>| Event Name | Month | Date (Display) | Time | Location | Admission | Highlights | Audience | Valid Until (Expiry) | Status |
+|------------|-------|---------------|------|----------|-----------|------------|----------|---------------------|--------|
+| Annual Street Fair 2026 | June | [fill in] | [fill in] | Seaview Avenue | Free | Live music · food carts · kids rides · raffles · demonstrations · bounce houses · community booths | Whole family | [fill in] | Date missing |
+| Summer Camp Opening Day | June | June 29, 2026 | 8:30 AM | H.E.S. Main Building | Enrolled campers | Swimming · Arts · Sports · STEM · Day Trips · Camp Xtra | Enrolled campers &amp; families | June 29, 2026 | Active |
+| It Takes A Village · Family Tech | July | [fill in] | [fill in] | Zoom + Main Hall (hybrid) | Free | Technology &amp; screen time · It Takes A Village series | Parents &amp; families | [fill in] | Date missing |
+| Fall Festival | October | October 14 · 1–5 PM | 1:00–5:00 PM | H.E.S. Building | [fill in] | Decorations · Facilities &amp; Catering | Community | October 14, 2026 | Scheduled |
+| Thanksgiving Food Drive | November | November 20–24 | TBD | H.E.S. Building | Free / Donation | Food collection bins · volunteer registration | Community | November 24, 2026 | Scheduled |
+| Holiday Gala | December | December 10 · 6–10 PM | 6:00–10:00 PM | H.E.S. Building | Ticket / RSVP | Event program · Catering &amp; Entertainment | Members &amp; community | December 10, 2026 | Scheduled |
+| Family Wellness Workshop | January | January 15 · 10 AM–4 PM | 10:00 AM–4:00 PM | H.E.S. Building | Pre-registration required | Workshop materials · Social Services | Families | January 15, 2027 | Scheduled |
+| Valentine's Community Dinner | February | February 14 · 6–9 PM | 6:00–9:00 PM | H.E.S. Building | [fill in] | [fill in] | Community | February 14, 2027 | Scheduled |</pre>
+</details>
+
+
+<!-- ══════════════════════════════════════════ -->
+<div class="section-label"><span class="num">6</span> DATA QUALITY ISSUES — Action Required</div>
+<p class="section-note">Problems found in the source sheet that need to be fixed before the SSOT is production-ready.</p>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>#</th><th>Sheet Tab</th><th>Issue</th><th>Impact</th><th>Fix Required</th><th>Priority</th></tr></thead>
+  <tbody>
+    <tr>
+      <td class="td-num">1</td>
+      <td>Events</td>
+      <td>Nearly all <strong>date</strong>, <strong>date_short</strong>, <strong>day_number</strong>, and <strong>start_time</strong> fields are blank</td>
+      <td>Events will not display dates or auto-expire on the website</td>
+      <td>Fill in date, date_short, day_number, start_time, and Valid Until for every event row</td>
+      <td><span class="pill pill-red">Critical</span></td>
+    </tr>
+    <tr>
+      <td class="td-num">2</td>
+      <td>SubPrograms vs Programs</td>
+      <td>Social Services sub-programs are stored as <strong>"Social Service"</strong> (singular) in SubPrograms tab but <strong>"Social Services"</strong> (plural) in Programs tab</td>
+      <td>Lookup failure — website pages trying to find "Social Services" sub-programs will return empty</td>
+      <td>Standardize to <strong>"Social Services"</strong> (plural) in both tabs</td>
+      <td><span class="pill pill-red">Critical</span></td>
+    </tr>
+    <tr>
+      <td class="td-num">3</td>
+      <td>Org</td>
+      <td><strong>founded_year</strong> row is blank</td>
+      <td>Any component that displays founding year will show blank or default</td>
+      <td>Set <code>founded_year</code> = <strong>1899</strong></td>
+      <td><span class="pill pill-yellow">High</span></td>
+    </tr>
+    <tr>
+      <td class="td-num">4</td>
+      <td>Org</td>
+      <td><strong>hours_open</strong> and <strong>hours_close</strong> are blank</td>
+      <td>Hours display on Visit page and header will show blank</td>
+      <td>Fill in open/close times for weekdays (e.g. 8:00 AM / 10:00 PM)</td>
+      <td><span class="pill pill-yellow">High</span></td>
+    </tr>
+    <tr>
+      <td class="td-num">5</td>
+      <td>Programs</td>
+      <td>Summer Camp <strong>start_date</strong>, <strong>end_date</strong>, <strong>age_min</strong>, <strong>age_max</strong>, and <strong>ui_order</strong> are blank</td>
+      <td>Date-based content (countdown, expiry) and sort order won't function</td>
+      <td>Set start_date = 2026-06-29, end_date = 2026-08-19, age_min = 4, age_max = 16, ui_order = 1</td>
+      <td><span class="pill pill-yellow">High</span></td>
+    </tr>
+    <tr>
+      <td class="td-num">6</td>
+      <td>HeroSlides</td>
+      <td>Slide 3 (Annual Street Fair) is set to <strong>Active = No</strong> but has no expiry date and no body copy</td>
+      <td>Slide can't be activated without body copy</td>
+      <td>Add body copy and set Active = Yes when Street Fair is upcoming; or set Expiry Date so it auto-expires</td>
+      <td><span class="pill pill-gray">Medium</span></td>
+    </tr>
+    <tr>
+      <td class="td-num">7</td>
+      <td>Calendar</td>
+      <td>Activity names and start/end times are largely blank — only Room and Days columns have data</td>
+      <td>Today's Schedule on the kiosk and website will show empty or broken rows</td>
+      <td>Populate Activity, Start Time, and End Time columns for each recurring class/activity</td>
+      <td><span class="pill pill-yellow">High</span></td>
+    </tr>
+    <tr>
+      <td class="td-num">8</td>
+      <td>Programs</td>
+      <td>Social Services has no <strong>description</strong>, <strong>audience</strong>, <strong>schedule</strong>, or <strong>age_range_label</strong> facts</td>
+      <td>Social Services page overview will render with no fact strip or key details</td>
+      <td>Add rows: audience = "All community members", schedule = "Year-round", age_range_label = "All ages"</td>
+      <td><span class="pill pill-gray">Medium</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</body>
+</html>

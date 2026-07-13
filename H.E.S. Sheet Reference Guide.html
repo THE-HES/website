@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>H.E.S. Master Sheet — Reference Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;800;900&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;padding:32px 48px 80px;font-family:'Montserrat',sans-serif;font-size:13px;background:#f4f5fb;color:#0d1070;-webkit-font-smoothing:antialiased;max-width:1100px}
+
+  .cover{background:#1A1F8F;color:#fff;border-radius:12px;padding:32px 40px 28px;margin-bottom:32px;border-bottom:5px solid #F5C400}
+  .cover-eye{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#F5C400;margin-bottom:6px}
+  .cover h1{font-family:'League Spartan',sans-serif;font-size:28px;font-weight:900;margin:0 0 6px;color:#fff}
+  .cover p{color:rgba(255,255,255,.65);font-size:13px;margin:0}
+
+  .card{background:#fff;border-radius:12px;padding:28px 32px;margin-bottom:20px;box-shadow:0 2px 12px rgba(13,16,112,.07)}
+  .card-title{font-family:'League Spartan',sans-serif;font-size:18px;font-weight:800;color:#1A1F8F;margin:0 0 16px;display:flex;align-items:center;gap:10px}
+  .card-title .icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+
+  /* ── Stats diagram ── */
+  .stats-diagram{background:#f4f5fb;border-radius:10px;padding:20px 24px;margin:0 0 16px}
+  .stats-rule{display:flex;align-items:center;gap:0;margin-bottom:10px}
+  .stats-rule:last-child{margin-bottom:0}
+  .sr-source{background:#1A1F8F;color:#F5C400;font-family:'Courier New',monospace;font-size:11px;font-weight:700;padding:6px 12px;border-radius:6px 0 0 6px;white-space:nowrap}
+  .sr-arrow{background:#F5C400;color:#1A1F8F;font-size:13px;font-weight:900;padding:6px 10px}
+  .sr-dest{background:#E8EAF9;color:#1A1F8F;font-size:11px;padding:6px 12px;border-radius:0 6px 6px 0;flex:1}
+  .sr-dest strong{color:#1A1F8F}
+  .sr-dest .xmark{color:#E8363A;font-weight:700}
+
+  /* ── Status table ── */
+  .status-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:0 0 16px}
+  .status-card{border-radius:8px;padding:14px 16px;border:2px solid}
+  .s-active  {background:#E8F8EE;border-color:#2AAB47}
+  .s-open    {background:#E3F4FD;border-color:#3DB8F5}
+  .s-limited {background:#FFF3E0;border-color:#F26522}
+  .s-upcoming{background:#EEF0FF;border-color:#1A1F8F}
+  .s-inactive{background:#F5F5F5;border-color:#999}
+  .s-expired {background:#FEE2E2;border-color:#E8363A}
+  .status-name{font-family:'League Spartan',sans-serif;font-size:14px;font-weight:800;margin-bottom:4px}
+  .s-active   .status-name{color:#166534}
+  .s-open     .status-name{color:#0D4A6E}
+  .s-limited  .status-name{color:#7A2A00}
+  .s-upcoming .status-name{color:#1A1F8F}
+  .s-inactive .status-name{color:#555}
+  .s-expired  .status-name{color:#991B1B}
+  .status-desc{font-size:12px;color:#444;line-height:1.5;margin-bottom:6px}
+  .status-eg{font-family:'Courier New',monospace;font-size:10px;background:rgba(0,0,0,.07);padding:2px 6px;border-radius:3px}
+
+  /* ── Expiry timeline ── */
+  .timeline{position:relative;padding-left:28px;margin:0 0 16px}
+  .timeline::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:#dde}
+  .tl-item{position:relative;margin-bottom:16px}
+  .tl-item:last-child{margin-bottom:0}
+  .tl-dot{position:absolute;left:-23px;width:14px;height:14px;border-radius:50%;border:2px solid #fff;top:3px}
+  .tl-dot.green {background:#2AAB47}
+  .tl-dot.yellow{background:#F5C400}
+  .tl-dot.red   {background:#E8363A}
+  .tl-dot.gray  {background:#999}
+  .tl-title{font-weight:700;font-size:13px;color:#1A1F8F;margin-bottom:2px}
+  .tl-desc{font-size:12px;color:#555;line-height:1.5}
+
+  /* ── Tabs anatomy ── */
+  .tab-anatomy{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px}
+  .ta-card{border-radius:8px;border:1px solid #dde;overflow:hidden}
+  .ta-header{background:#1A1F8F;color:#fff;padding:10px 14px}
+  .ta-name{font-family:'League Spartan',sans-serif;font-size:13px;font-weight:800;color:#F5C400}
+  .ta-schema{font-family:'Courier New',monospace;font-size:10px;color:rgba(255,255,255,.65);margin-top:2px}
+  .ta-body{padding:12px 14px;background:#fff}
+  .ta-rule{font-size:11px;color:#333;margin-bottom:4px;line-height:1.5}
+  .ta-rule:last-child{margin-bottom:0}
+  .ta-rule .k{font-family:'Courier New',monospace;font-size:10px;background:#E8EAF9;color:#1A1F8F;padding:1px 5px;border-radius:3px}
+
+  /* ── Do / Don't ── */
+  .do-dont{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px}
+  .do-card,.dont-card{border-radius:8px;padding:14px 16px}
+  .do-card{background:#E8F8EE;border:1px solid #2AAB47}
+  .dont-card{background:#FEE2E2;border:1px solid #E8363A}
+  .dd-title{font-weight:700;font-size:12px;margin-bottom:8px}
+  .do-card .dd-title{color:#166534}
+  .dont-card .dd-title{color:#991B1B}
+  .dd-item{font-size:12px;color:#333;margin-bottom:5px;display:flex;gap:6px;align-items:flex-start}
+  .dd-check{font-size:13px;flex-shrink:0;margin-top:-1px}
+
+  .callout{border-left:4px solid #F5C400;background:#fffbe6;padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:12px;line-height:1.65}
+  .callout strong{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#1A1F8F;display:block;margin-bottom:3px}
+  .callout-red{border-color:#E8363A;background:#fff5f5}
+  .callout-green{border-color:#2AAB47;background:#E8F8EE}
+
+  table{width:100%;border-collapse:collapse;font-size:11.5px;margin:8px 0 16px}
+  thead th{background:#1A1F8F;color:#fff;padding:8px 10px;text-align:left;font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+  tbody tr:nth-child(even){background:#f7f8fd}
+  tbody td{padding:7px 10px;border-bottom:1px solid #eef;vertical-align:top;line-height:1.5}
+  code{font-family:'Courier New',monospace;background:#e8eaf9;color:#1A1F8F;padding:1px 5px;border-radius:3px;font-size:11px}
+  h3{font-size:13px;font-weight:700;color:#1A1F8F;margin:16px 0 8px}
+  p{margin:0 0 10px;color:#444;line-height:1.65;font-size:12.5px}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-eye">H.E.S. AI Brand Brain · Master Sheet Reference</div>
+  <h1>How the Google Sheet Works</h1>
+  <p>Stats · Status values · Auto-expiry · Tab anatomy · Rules for editing</p>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title"><span class="icon" style="background:#FFF3E0">📊</span>Stats — Single Source of Truth</div>
+
+  <p>Stats (years serving, families served, programs count) appear on the homepage stat bar and in blurbs across the site. They must only be defined <strong>once</strong> — in the <strong>Org tab</strong>. If they exist anywhere else, updates to one place won't update the other.</p>
+
+  <div class="stats-diagram">
+    <div class="stats-rule">
+      <div class="sr-source">Org tab · stat_1_num</div>
+      <div class="sr-arrow">→</div>
+      <div class="sr-dest">✅ <strong>Homepage stats bar</strong> — "100+ years serving southeast Brooklyn"</div>
+    </div>
+    <div class="stats-rule">
+      <div class="sr-source">Org tab · stat_2_num</div>
+      <div class="sr-arrow">→</div>
+      <div class="sr-dest">✅ <strong>Homepage stats bar</strong> — "5,000+ community members served annually"</div>
+    </div>
+    <div class="stats-rule">
+      <div class="sr-source">Org tab · stat_3_num</div>
+      <div class="sr-arrow">→</div>
+      <div class="sr-dest">✅ <strong>Homepage stats bar</strong> — "20+ programs across every age group"</div>
+    </div>
+    <div class="stats-rule" style="margin-top:10px;padding-top:10px;border-top:1px solid #dde">
+      <div class="sr-source" style="background:#E8363A">Website tab · stats section</div>
+      <div class="sr-arrow" style="background:#E8363A;color:#fff">✕</div>
+      <div class="sr-dest"><span class="xmark">DO NOT define stats here.</span> If both exist, the Org tab wins — but the Website tab values become stale dead weight that confuses editors.</div>
+    </div>
+  </div>
+
+  <div class="do-dont">
+    <div class="do-card">
+      <div class="dd-title">✅ Correct — edit stats in Org tab only</div>
+      <div class="dd-item"><span class="dd-check">✓</span>Find the row with <code>fact_key = stat_1_num</code> → change the value</div>
+      <div class="dd-item"><span class="dd-check">✓</span>Update <code>stat_1_label</code> if the description changes</div>
+      <div class="dd-item"><span class="dd-check">✓</span>Website updates within 30 seconds automatically</div>
+    </div>
+    <div class="dont-card">
+      <div class="dd-title">❌ Wrong — duplicating stats</div>
+      <div class="dd-item"><span class="dd-check">✗</span>Adding stat rows to the Website tab</div>
+      <div class="dd-item"><span class="dd-check">✗</span>Hardcoding "100+" in program descriptions</div>
+      <div class="dd-item"><span class="dd-check">✗</span>Updating one copy of a stat without updating the other</div>
+    </div>
+  </div>
+
+  <h3>The 6 stat rows in the Org tab</h3>
+  <table>
+    <thead><tr><th>fact_key</th><th>What it does</th><th>Current value</th></tr></thead>
+    <tbody>
+      <tr><td><code>stat_1_num</code></td><td>The big number shown first on the homepage</td><td>100+</td></tr>
+      <tr><td><code>stat_1_label</code></td><td>The description below stat 1's number</td><td>years serving southeast Brooklyn</td></tr>
+      <tr><td><code>stat_2_num</code></td><td>The big number shown second</td><td>5,000+</td></tr>
+      <tr><td><code>stat_2_label</code></td><td>The description below stat 2's number</td><td>community members served annually</td></tr>
+      <tr><td><code>stat_3_num</code></td><td>The big number shown third</td><td>20+</td></tr>
+      <tr><td><code>stat_3_label</code></td><td>The description below stat 3's number</td><td>programs across every age group</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title"><span class="icon" style="background:#EEF0FF">🏷️</span>Status Values — What They Mean</div>
+
+  <p>The <strong>Status</strong> field controls how a program or event appears on the website. Here is exactly what each value does:</p>
+
+  <div class="status-grid">
+    <div class="status-card s-active">
+      <div class="status-name">ACTIVE</div>
+      <div class="status-desc">The program is <strong>running right now</strong> and available year-round. No registration window — just show up or call.</div>
+      <span class="status-eg">Examples: Food Pantry, Fitness Center, Music School</span>
+    </div>
+    <div class="status-card s-open">
+      <div class="status-name">OPEN</div>
+      <div class="status-desc"><strong>Registration is currently open.</strong> Seasonal programs where you can sign up right now.</div>
+      <span class="status-eg">Examples: Summer Camp (during reg season), After School Program</span>
+    </div>
+    <div class="status-card s-limited">
+      <div class="status-name">LIMITED</div>
+      <div class="status-desc">Registration is open but <strong>spots are filling fast.</strong> Creates urgency — shown with an orange badge.</div>
+      <span class="status-eg">Examples: Teen Unit, Camp Xtra (limited capacity)</span>
+    </div>
+    <div class="status-card s-upcoming">
+      <div class="status-name">UPCOMING</div>
+      <div class="status-desc">The program or event <strong>hasn't started yet.</strong> It's announced but registration isn't open or the date hasn't arrived.</div>
+      <span class="status-eg">Examples: Fall Festival (months away), a new program launching next season</span>
+    </div>
+    <div class="status-card s-inactive">
+      <div class="status-name">INACTIVE</div>
+      <div class="status-desc"><strong>Manually hidden</strong> from the website. Use this to temporarily remove a program without deleting it from the sheet.</div>
+      <span class="status-eg">Examples: A program that's on pause, an old registration link</span>
+    </div>
+    <div class="status-card s-expired">
+      <div class="status-name">EXPIRED</div>
+      <div class="status-desc"><strong>Automatically set by the website</strong> when the event's date passes. You never need to set this manually — it happens on its own via the <code>valid_until</code> column.</div>
+      <span class="status-eg">Examples: Annual Street Fair 2026 (June 7 — now expired)</span>
+    </div>
+  </div>
+
+  <div class="callout callout-red">
+    <strong>⚠ "Upcoming" with a past date is a contradiction</strong>
+    If a program is marked "Upcoming" but its date has already passed, that's a data error. Either update the date, change the status to "Active," or let it auto-expire (for Events). The Annual Street Fair and Camp Opening Day were both marked Upcoming but their dates had passed — they've been removed from the live events list.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title"><span class="icon" style="background:#E8F8EE">⏰</span>Auto-Expiry — How Events Disappear Automatically</div>
+
+  <p>You <strong>never need to manually delete old events</strong> from the Google Sheet. The website checks the <code>valid_until</code> date on every page load and hides any event where that date has passed.</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot green"></div>
+      <div class="tl-title">You add an event row to the Events tab</div>
+      <div class="tl-desc">Set <code>valid_until</code> = the last day the event should be visible (usually the event date itself). Example: <code>2026-10-13</code> for the Fall Festival.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot green"></div>
+      <div class="tl-title">Event appears on the website automatically</div>
+      <div class="tl-desc">The website shows it in the events section and community events page as long as today's date is before <code>valid_until</code>.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot yellow"></div>
+      <div class="tl-title">The valid_until date arrives</div>
+      <div class="tl-desc">On the day of the event (or the day after — your choice), the website stops showing it. No action needed from you.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot gray"></div>
+      <div class="tl-title">The row stays in the sheet — safely archived</div>
+      <div class="tl-desc">Old event rows are not deleted. They stay in the sheet as a historical record. They simply don't appear on the website anymore. You can always update the <code>valid_until</code> date to bring an event back.</div>
+    </div>
+  </div>
+
+  <h3>Current event status as of today (July 6, 2026)</h3>
+  <table>
+    <thead><tr><th>Event</th><th>valid_until date</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Annual Street Fair 2026</td>
+        <td>2026-06-07</td>
+        <td style="color:#991B1B;font-weight:700">🔴 Expired June 7</td>
+        <td>Removed from import CSV + website fallback. Keep in sheet for records.</td>
+      </tr>
+      <tr>
+        <td>Summer Camp Opening Day 2026</td>
+        <td>2026-06-29</td>
+        <td style="color:#991B1B;font-weight:700">🔴 Expired June 29</td>
+        <td>Removed from import CSV + website fallback. Keep in sheet for records.</td>
+      </tr>
+      <tr>
+        <td>It Takes A Village · Family Tech</td>
+        <td>2026-07-31</td>
+        <td style="color:#166534;font-weight:700">🟢 Active</td>
+        <td>Shows on website. Expires automatically July 31.</td>
+      </tr>
+      <tr>
+        <td>Fall Festival 2026</td>
+        <td>2026-10-13</td>
+        <td style="color:#166534;font-weight:700">🟢 Active</td>
+        <td>Shows on website. Expires automatically October 13.</td>
+      </tr>
+      <tr>
+        <td>Thanksgiving Food Drive 2026</td>
+        <td>2026-11-26</td>
+        <td style="color:#166534;font-weight:700">🟢 Active</td>
+        <td>Shows on website. Expires automatically November 26.</td>
+      </tr>
+      <tr>
+        <td>Holiday Gala 2026</td>
+        <td>2026-12-10</td>
+        <td style="color:#166534;font-weight:700">🟢 Active</td>
+        <td>Shows on website. Expires automatically December 10.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-green">
+    <strong>✅ Rule: always set valid_until when adding an event</strong>
+    Every event row needs a <code>valid_until</code> date. Without it, the website will show the event forever — even years after it happened. Format: <code>YYYY-MM-DD</code> (e.g. <code>2026-10-13</code>). Use the date of the event itself, or the day after for events that run multiple days.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title"><span class="icon" style="background:#F3E8FF">📋</span>Tab Anatomy — What Each Tab Does</div>
+
+  <div class="tab-anatomy">
+    <div class="ta-card">
+      <div class="ta-header"><div class="ta-name">Org</div><div class="ta-schema">fact_key | fact_value | notes</div></div>
+      <div class="ta-body">
+        <div class="ta-rule">🏛️ Organization identity — name, address, phone, website</div>
+        <div class="ta-rule">📊 Stats bar numbers — <span class="k">stat_1_num</span> through <span class="k">stat_3_num</span></div>
+        <div class="ta-rule">🏷️ Tagline, mission phrase, population served</div>
+        <div class="ta-rule">⏰ Building hours — <span class="k">hours_open</span> / <span class="k">hours_close</span></div>
+        <div class="ta-rule" style="margin-top:8px;color:#E8363A;font-weight:600">⚠ Stats go HERE and only here</div>
+      </div>
+    </div>
+    <div class="ta-card">
+      <div class="ta-header"><div class="ta-name">HeroSlides</div><div class="ta-schema">active | theme | eyebrow | body | image_url | … | expiry_date</div></div>
+      <div class="ta-body">
+        <div class="ta-rule">🖼️ Homepage hero carousel — one row per slide</div>
+        <div class="ta-rule">Flat format (not EAV) — each column = one attribute</div>
+        <div class="ta-rule"><span class="k">active</span> = yes/no to show or hide a slide</div>
+        <div class="ta-rule"><span class="k">expiry_date</span> = slide auto-hides after this date</div>
+        <div class="ta-rule">Use | in Theme to control line breaks: <span class="k">Summer Camp | 2026 is | now open.</span></div>
+      </div>
+    </div>
+    <div class="ta-card">
+      <div class="ta-header"><div class="ta-name">Programs</div><div class="ta-schema">entity | fact_key | fact_value | type</div></div>
+      <div class="ta-body">
+        <div class="ta-rule">🗂️ One entity = one top-level program (8 total)</div>
+        <div class="ta-rule">EAV format — each attribute = its own row</div>
+        <div class="ta-rule">Key facts: <span class="k">age_range_label</span> <span class="k">audience</span> <span class="k">schedule</span></div>
+        <div class="ta-rule">Sub-programs listed: <span class="k">sub_program</span> (one row each)</div>
+        <div class="ta-rule">UI settings: <span class="k">ui_accent</span> <span class="k">ui_order</span> <span class="k">photo_url</span></div>
+      </div>
+    </div>
+    <div class="ta-card">
+      <div class="ta-header"><div class="ta-name">SubPrograms</div><div class="ta-schema">category | sub_program | fact_key | fact_value</div></div>
+      <div class="ta-body">
+        <div class="ta-rule">📄 Rich content for individual sub-program pages</div>
+        <div class="ta-rule">Key facts: <span class="k">summary</span> <span class="k">description</span> <span class="k">ages</span></div>
+        <div class="ta-rule"><span class="k">schedule</span> <span class="k">cost</span> <span class="k">register</span></div>
+        <div class="ta-rule" style="color:#E8363A;font-weight:600">⚠ Category must match Programs entity exactly</div>
+        <div class="ta-rule" style="color:#E8363A">"Social Services" ≠ "Social Service" — spelling matters</div>
+      </div>
+    </div>
+    <div class="ta-card">
+      <div class="ta-header"><div class="ta-name">Events</div><div class="ta-schema">event | fact_key | fact_value | valid_until</div></div>
+      <div class="ta-body">
+        <div class="ta-rule">📅 Upcoming events — auto-expire via <span class="k">valid_until</span></div>
+        <div class="ta-rule">EAV format — one event can have many rows</div>
+        <div class="ta-rule">Key facts: <span class="k">date</span> <span class="k">month</span> <span class="k">start_time</span> <span class="k">location</span></div>
+        <div class="ta-rule" style="color:#E8363A;font-weight:600">⚠ Always set valid_until — or it shows forever</div>
+        <div class="ta-rule">Old events stay in sheet as archive — just hidden</div>
+      </div>
+    </div>
+    <div class="ta-card">
+      <div class="ta-header"><div class="ta-name">Calendar</div><div class="ta-schema">activity | start_time | end_time | room | days | notes</div></div>
+      <div class="ta-body">
+        <div class="ta-rule">🕐 Recurring weekly activities — filtered by today's day</div>
+        <div class="ta-rule">Flat format — one row per activity</div>
+        <div class="ta-rule"><span class="k">days</span> = Mon,Wed,Fri or Mon-Fri or just Tue</div>
+        <div class="ta-rule">Only shows today's activities on the kiosk/website</div>
+        <div class="ta-rule" style="color:#E8363A;font-weight:600">⚠ Mostly empty — needs to be filled in</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title"><span class="icon" style="background:#FFF3E0">✏️</span>Quick Edit Reference — Most Common Tasks</div>
+  <table>
+    <thead><tr><th>I want to…</th><th>Go to tab</th><th>Find this</th><th>Edit this</th></tr></thead>
+    <tbody>
+      <tr><td>Update the phone number everywhere</td><td><code>Org</code></td><td><code>fact_key = phone</code></td><td><code>fact_value</code> column</td></tr>
+      <tr><td>Change the "100+" stat to a new number</td><td><code>Org</code></td><td><code>fact_key = stat_1_num</code></td><td><code>fact_value</code> column</td></tr>
+      <tr><td>Update Summer Camp dates</td><td><code>SubPrograms</code></td><td>Category=Summer Camp, Sub Program=Day Camp, <code>fact_key=season</code></td><td><code>fact_value</code> column</td></tr>
+      <tr><td>Add a new event</td><td><code>Events</code></td><td>Add new rows at the bottom</td><td>Set event name, date, month, start_time, description, and <strong>valid_until</strong></td></tr>
+      <tr><td>Hide an event that already happened</td><td><code>Events</code></td><td>Find the event's rows</td><td>Change <code>valid_until</code> to a past date (e.g. yesterday)</td></tr>
+      <tr><td>Change the homepage hero slide</td><td><code>HeroSlides</code></td><td>The slide's row</td><td>Edit the Theme or Body columns; set Active=no to hide</td></tr>
+      <tr><td>Update Food Pantry hours</td><td><code>SubPrograms</code></td><td>Category=Social Services, Sub Program=Food Pantry, <code>fact_key=hours</code></td><td><code>fact_value</code> column</td></tr>
+      <tr><td>Temporarily hide a program from the site</td><td><code>Programs</code></td><td>Find the program entity</td><td>Add a row: <code>fact_key=status</code>, <code>fact_value=inactive</code></td></tr>
+      <tr><td>Update building hours</td><td><code>Org</code></td><td><code>fact_key = hours_open</code> and <code>hours_close</code></td><td><code>fact_value</code> column</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

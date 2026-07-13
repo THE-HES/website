@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>H.E.S. Google Sheets Import Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;800;900&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;padding:32px 48px 80px;font-family:'Montserrat',sans-serif;font-size:13px;background:#f4f5fb;color:#0d1070;-webkit-font-smoothing:antialiased}
+
+  .cover{background:#1A1F8F;color:#fff;border-radius:12px;padding:32px 40px 28px;margin-bottom:36px;border-bottom:5px solid #F5C400}
+  .cover-eye{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#F5C400;margin-bottom:6px}
+  .cover h1{font-family:'League Spartan',sans-serif;font-size:28px;font-weight:900;margin:0 0 6px;color:#fff}
+  .cover p{color:rgba(255,255,255,.65);font-size:13px;margin:0}
+  .cover-meta{display:flex;gap:28px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.15);font-size:11px;color:rgba(255,255,255,.5)}
+  .cover-meta strong{color:#F5C400}
+
+  .section{background:#fff;border-radius:12px;padding:28px 32px;margin-bottom:24px;box-shadow:0 2px 12px rgba(13,16,112,.08)}
+  .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#1A1F8F;color:#F5C400;font-family:'League Spartan',sans-serif;font-size:13px;font-weight:900;margin-right:10px;flex-shrink:0}
+  .section-title{display:flex;align-items:center;font-family:'League Spartan',sans-serif;font-size:18px;font-weight:800;color:#1A1F8F;margin:0 0 18px}
+
+  .tab-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+  .tab-card{background:#1A1F8F;border-radius:8px;padding:14px 16px;color:#fff}
+  .tab-card .tab-name{font-family:'League Spartan',sans-serif;font-size:14px;font-weight:800;color:#F5C400;margin-bottom:4px}
+  .tab-card .tab-rows{font-size:11px;color:rgba(255,255,255,.6)}
+  .tab-card .tab-file{font-family:'Courier New',monospace;font-size:10px;background:rgba(255,255,255,.12);border-radius:4px;padding:2px 6px;color:#fff;margin-top:6px;display:inline-block}
+
+  .steps{counter-reset:step;list-style:none;margin:0;padding:0}
+  .steps li{counter-increment:step;display:flex;gap:14px;padding:12px 0;border-bottom:1px solid #eef}
+  .steps li:last-child{border-bottom:none}
+  .steps li::before{content:counter(step);display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#F5C400;color:#1A1F8F;font-family:'League Spartan',sans-serif;font-size:12px;font-weight:900;flex-shrink:0;margin-top:1px}
+  .steps li .step-body{flex:1}
+  .steps li .step-title{font-weight:700;font-size:13px;color:#1A1F8F;margin-bottom:3px}
+  .steps li .step-desc{color:#555;font-size:12px;line-height:1.6}
+
+  .callout{border-left:4px solid #F5C400;background:#fffbe6;padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:12px;line-height:1.65}
+  .callout strong{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#1A1F8F;margin-bottom:3px}
+  .callout-red{border-color:#E8363A;background:#fff5f5}
+  .callout-green{border-color:#2AAB47;background:#f0fff4}
+
+  code{font-family:'Courier New',monospace;background:#e8eaf9;color:#1A1F8F;padding:1px 5px;border-radius:3px;font-size:11px}
+
+  .wire-diagram{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:0;margin:20px 0;background:#f4f5fb;border-radius:10px;overflow:hidden}
+  .wire-box{padding:18px 14px;text-align:center}
+  .wire-box .wb-label{font-family:'League Spartan',sans-serif;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+  .wire-box .wb-sub{font-size:11px;color:#666}
+  .wire-box.blue{background:#1A1F8F;color:#fff}.wire-box.blue .wb-sub{color:rgba(255,255,255,.6)}
+  .wire-box.yellow{background:#F5C400;color:#1A1F8F}.wire-box.yellow .wb-label{color:#0d1070}
+  .wire-box.green{background:#E8F8EE;color:#0d4020}
+  .wire-arrow{font-size:22px;color:#1A1F8F;padding:0 4px;text-align:center;font-weight:700}
+
+  .file-list{list-style:none;margin:0;padding:0}
+  .file-list li{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f4f5fb;border-radius:6px;margin-bottom:6px;font-size:12px}
+  .file-list li .fi-name{font-family:'Courier New',monospace;font-weight:700;color:#1A1F8F;flex:1}
+  .file-list li .fi-rows{color:#888;font-size:11px;white-space:nowrap}
+  .file-list li .fi-tab{background:#1A1F8F;color:#F5C400;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap}
+
+  table{width:100%;border-collapse:collapse;font-size:11.5px;margin:8px 0 16px}
+  thead th{background:#1A1F8F;color:#fff;padding:8px 10px;text-align:left;font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+  tbody tr:nth-child(even){background:#f7f8fd}
+  tbody td{padding:7px 10px;border-bottom:1px solid #eef;vertical-align:top}
+  .td-tab{font-family:'Courier New',monospace;font-weight:700;color:#1A1F8F;white-space:nowrap}
+  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+  .badge-red{background:#fee2e2;color:#991b1b}
+  .badge-green{background:#dcfce7;color:#166534}
+  .badge-yellow{background:#fef9c3;color:#854d0e}
+
+  h3{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:#1A1F8F;margin:18px 0 8px}
+  hr{border:none;border-top:1px solid #eef;margin:20px 0}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-eye">Hebrew Educational Society · AI Brand Brain · SSOT Wiring Guide</div>
+  <h1>Google Sheets Import Guide</h1>
+  <p>Step-by-step instructions to wire your master content into the live website via Google Sheets.</p>
+  <div class="cover-meta">
+    <div><strong>Sheet ID:</strong> 1rGpqCYSmB09JbzBd5tHTArSppjJu0u3JBVPMTW9AOaY</div>
+    <div><strong>Files:</strong> 4 CSV imports ready in <code style="color:#F5C400;background:rgba(255,255,255,.15)">exports/</code></div>
+    <div><strong>Version:</strong> July 2026</div>
+  </div>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="section">
+  <div class="section-title"><span class="section-num">→</span>How the Wiring Works</div>
+  <div class="wire-diagram">
+    <div class="wire-box yellow"><div class="wb-label">Excel / CSV</div><div class="wb-sub">Your master content files</div></div>
+    <div class="wire-arrow">→</div>
+    <div class="wire-box blue"><div class="wb-label">Google Sheets</div><div class="wb-sub">4 tabs: Org · Programs · SubPrograms · Events</div></div>
+    <div class="wire-arrow">→</div>
+    <div class="wire-box green"><div class="wb-label">Website</div><div class="wb-sub">sheets.js polls every 30s — live updates, no deploy</div></div>
+  </div>
+  <p style="color:#555;font-size:12px;line-height:1.7;margin:0">The website's <code>sheets.js</code> engine fetches from your Google Sheet every 30 seconds. When you update any cell in Google Sheets, the website reflects it within half a minute — <strong>no code deploy required</strong>. The 4 CSV files below contain all program, event, and org data needed to fully populate the site.</p>
+</div>
+
+<!-- FILES READY -->
+<div class="section">
+  <div class="section-title"><span class="section-num">1</span>Files Ready to Import</div>
+  <p style="color:#555;font-size:12px;margin:0 0 14px">Download these 4 files from the <code>exports/</code> folder and import them into the matching Google Sheets tabs.</p>
+  <ul class="file-list">
+    <li><span class="fi-name">GSheet_01_Org.csv</span><span class="fi-tab">Org tab</span><span class="fi-rows">34 rows · org identity, contact, stats</span></li>
+    <li><span class="fi-name">GSheet_02_Programs.csv</span><span class="fi-tab">Programs tab</span><span class="fi-rows">168 rows · all 8 programs + facts</span></li>
+    <li><span class="fi-name">GSheet_03_SubPrograms.csv</span><span class="fi-tab">SubPrograms tab</span><span class="fi-rows">181 rows · all 30 sub-programs + descriptions</span></li>
+    <li><span class="fi-name">GSheet_04_Events.csv</span><span class="fi-tab">Events tab</span><span class="fi-rows">70 rows · 6 upcoming events with dates + expiry</span></li>
+  </ul>
+</div>
+
+<!-- STEP BY STEP -->
+<div class="section">
+  <div class="section-title"><span class="section-num">2</span>Step-by-Step Import Instructions</div>
+
+  <div class="callout callout-red">
+    <strong>⚠ Do this for each of the 4 tabs — one at a time</strong>
+    Don't try to import all 4 at once. Open the correct tab in Google Sheets, then follow the steps below for each file.
+  </div>
+
+  <ol class="steps">
+    <li>
+      <div class="step-body">
+        <div class="step-title">Open the H.E.S. Master Google Sheet</div>
+        <div class="step-desc">Go to <a href="https://docs.google.com/spreadsheets/d/1rGpqCYSmB09JbzBd5tHTArSppjJu0u3JBVPMTW9AOaY" target="_blank" rel="noopener">sheets.google.com</a> and open the H.E.S. Brain spreadsheet. You'll see tabs at the bottom: <strong>Org · HeroSlides · Website · Programs · Events · Calendar · SubPrograms</strong>.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <div class="step-title">Click on the tab you want to update (e.g. "Org")</div>
+        <div class="step-desc">Start with <strong>Org</strong>, then do <strong>Programs</strong>, then <strong>SubPrograms</strong>, then <strong>Events</strong>.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <div class="step-title">Select all existing data in the tab and delete it</div>
+        <div class="step-desc">Press <code>Ctrl+A</code> (or <code>Cmd+A</code>) to select all cells, then press <code>Delete</code> to clear them. This clears the old EAV data so the new import goes in cleanly.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <div class="step-title">Import the matching CSV file</div>
+        <div class="step-desc">Go to <strong>File → Import → Upload</strong> → select the matching CSV file (e.g. <code>GSheet_01_Org.csv</code> for the Org tab). In the import dialog:
+          <br>• <strong>Import location:</strong> "Replace current sheet"
+          <br>• <strong>Separator type:</strong> Comma
+          <br>• <strong>Convert text to numbers/dates:</strong> Yes
+          <br>Then click <strong>Import data</strong>.
+        </div>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <div class="step-title">Verify the data landed correctly</div>
+        <div class="step-desc">Scroll through the sheet. Row 1 should be the column headers. Rows 2+ should be the data. Make sure values with commas (like addresses) are in a single cell — not split across columns.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <div class="step-title">Repeat for all 4 tabs</div>
+        <div class="step-desc">Do Programs → SubPrograms → Events in the same order. The website reads all tabs on every sync, so all 4 must be updated for the site to reflect the full dataset.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <div class="step-title">Wait 30 seconds, then reload the website</div>
+        <div class="step-desc">The <code>sheets.js</code> engine polls every 30 seconds. After the import is done, reload any page on the website and the new content will appear automatically.</div>
+      </div>
+    </li>
+  </ol>
+</div>
+
+<!-- WHAT EACH TAB DRIVES -->
+<div class="section">
+  <div class="section-title"><span class="section-num">3</span>What Each Google Sheet Tab Drives on the Website</div>
+  <table>
+    <thead><tr><th>Tab</th><th>Schema</th><th>What It Powers</th><th>Key Content</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="td-tab">Org</td>
+        <td><code>fact_key | fact_value | notes</code></td>
+        <td>Site-wide org name, phone, address, stats bar, footer, header</td>
+        <td>Name, phone, address, tagline, founded year, stat numbers</td>
+      </tr>
+      <tr>
+        <td class="td-tab">Programs</td>
+        <td><code>entity | fact_key | fact_value | type</code></td>
+        <td>Program tiles on homepage, program landing pages (ProgramPage component), overview content</td>
+        <td>All 8 programs: Summer Camp, Aquatics, Early Childhood, Sports & Fitness, Disability Services, Music School, After School, Social Services</td>
+      </tr>
+      <tr>
+        <td class="td-tab">SubPrograms</td>
+        <td><code>category | sub_program | fact_key | fact_value</code></td>
+        <td>Individual sub-program detail pages, sidebar nav items, descriptions, registration info</td>
+        <td>All 30 sub-programs with full descriptions, ages, schedules, cost, registration instructions</td>
+      </tr>
+      <tr>
+        <td class="td-tab">Events</td>
+        <td><code>event | fact_key | fact_value | valid_until</code></td>
+        <td>Events section on homepage, Community Events page, auto-expiry (events hide after their date)</td>
+        <td>Street Fair, Camp Opening, It Takes A Village, Fall Festival, Food Drive, Holiday Gala</td>
+      </tr>
+      <tr>
+        <td class="td-tab">HeroSlides</td>
+        <td><code>active | theme | eyebrow | … | expiry_date</code></td>
+        <td>Homepage hero carousel slides</td>
+        <td>3 slides — edit directly in Google Sheets (no CSV needed)</td>
+      </tr>
+      <tr>
+        <td class="td-tab">Calendar</td>
+        <td><code>activity | start_time | end_time | room | days</code></td>
+        <td>Today's Schedule on kiosk and Community Events page</td>
+        <td>Recurring weekly activities — fill in manually (Activity, Start Time, Room, Days)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- IMMEDIATE EDITS TO MAKE -->
+<div class="section">
+  <div class="section-title"><span class="section-num">4</span>Immediate Edits to Make After Import</div>
+
+  <div class="callout callout-red">
+    <strong>These cells are still blank and need to be filled in manually</strong>
+    The CSV import handles the data structure, but these time-sensitive or site-specific values must be entered by your team.
+  </div>
+
+  <table>
+    <thead><tr><th>Tab</th><th>Row / Field</th><th>What to Enter</th><th>Priority</th></tr></thead>
+    <tbody>
+      <tr><td class="td-tab">Events</td><td>Annual Street Fair 2026 → <code>date</code></td><td>Exact date of the 2026 Street Fair (currently shows June 7)</td><td><span class="badge badge-red">Critical</span></td></tr>
+      <tr><td class="td-tab">Events</td><td>All events → <code>day_number</code></td><td>Numeric day of month (e.g. "7", "29") for the date badge on event cards</td><td><span class="badge badge-red">Critical</span></td></tr>
+      <tr><td class="td-tab">Calendar</td><td>All rows</td><td>Fill in Activity name, Start Time, End Time, Room, and Days for every recurring class</td><td><span class="badge badge-red">Critical</span></td></tr>
+      <tr><td class="td-tab">Org</td><td><code>hours_close</code></td><td>Confirm actual closing time (currently set to 10:00 PM weekdays, 9:30 PM Sundays)</td><td><span class="badge badge-yellow">Medium</span></td></tr>
+      <tr><td class="td-tab">HeroSlides</td><td>Slide 3 → body copy &amp; expiry</td><td>Add body description for the Street Fair slide and set expiry to June 7, 2026</td><td><span class="badge badge-yellow">Medium</span></td></tr>
+      <tr><td class="td-tab">Programs</td><td>All programs → <code>ui_order</code></td><td>Confirm display order (1–8) matches the homepage tile layout you want</td><td><span class="badge badge-yellow">Medium</span></td></tr>
+      <tr><td class="td-tab">SubPrograms</td><td>Food Pantry → <code>hours</code></td><td>Confirm current pantry hours (CSV has Tue & Thu 10 AM–2 PM — verify this is current)</td><td><span class="badge badge-yellow">Medium</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- EDITING GOING FORWARD -->
+<div class="section">
+  <div class="section-title"><span class="section-num">5</span>Editing Content Going Forward</div>
+
+  <div class="callout callout-green">
+    <strong>✅ The right workflow — edit the sheet, not the code</strong>
+    Once these imports are in, all website content lives in Google Sheets. You should never need to edit HTML files to change program descriptions, event info, or org details.
+  </div>
+
+  <table>
+    <thead><tr><th>To change…</th><th>Edit this tab</th><th>Which row/field</th></tr></thead>
+    <tbody>
+      <tr><td>Phone number, address, or tagline</td><td class="td-tab">Org</td><td>Row with matching <code>fact_key</code></td></tr>
+      <tr><td>Program description or sub-programs listed</td><td class="td-tab">Programs</td><td>Entity = program name, Fact Key = description / sub_program</td></tr>
+      <tr><td>Sub-program detail page content</td><td class="td-tab">SubPrograms</td><td>Category + Sub Program columns → Fact Key = summary / description</td></tr>
+      <tr><td>Add/remove/edit an event</td><td class="td-tab">Events</td><td>Add new rows for a new event · Edit <code>valid_until</code> to expire it</td></tr>
+      <tr><td>Hide an event from the site</td><td class="td-tab">Events</td><td>Set <code>valid_until</code> to a past date — it auto-hides</td></tr>
+      <tr><td>Change the homepage hero slide</td><td class="td-tab">HeroSlides</td><td>Edit the relevant slide row — set <code>active</code> = yes/no</td></tr>
+      <tr><td>Update today's activity schedule</td><td class="td-tab">Calendar</td><td>Edit or add rows with Activity, Start Time, Room, Days</td></tr>
+      <tr><td>Update Food Pantry hours</td><td class="td-tab">SubPrograms</td><td>Category = Social Services, Sub Program = Food Pantry, Fact Key = hours</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- TESTING -->
+<div class="section">
+  <div class="section-title"><span class="section-num">6</span>How to Test That It's Working</div>
+  <ol class="steps">
+    <li><div class="step-body"><div class="step-title">Open the website homepage</div><div class="step-desc">Open <a href="Homepage.html">Homepage.html</a> and open your browser's developer console (F12). You should see <code>[H.E.S.]</code> log messages as the sheet syncs.</div></div></li>
+    <li><div class="step-body"><div class="step-title">Check the stats bar</div><div class="step-desc">The three impact stats (100+ years, 5,000+ families, 20+ programs) should appear from the Org tab. If they're blank, the Org tab import didn't land correctly.</div></div></li>
+    <li><div class="step-body"><div class="step-title">Open a program page</div><div class="step-desc">Open <a href="Summer Camp.html">Summer Camp.html</a>. The sidebar should show sub-program tabs (Day Camp, Teen Unit, Camp Xtra, Vacation Program). If you see only "Overview" and "Register", the SubPrograms import is missing or the entity name doesn't match exactly.</div></div></li>
+    <li><div class="step-body"><div class="step-title">Check events</div><div class="step-desc">Open <a href="Community Events.html">Community Events.html</a> → "Upcoming Events" tab. All 6 events should appear. If the list is empty, the Events tab import didn't work.</div></div></li>
+    <li><div class="step-body"><div class="step-title">Make a live edit to test sync</div><div class="step-desc">Change one value in the Google Sheet (e.g. the phone number in the Org tab). Wait 30 seconds. Reload the website. The new value should appear in the header or footer without any code change.</div></div></li>
+  </ol>
+</div>
+
+</body>
+</html>
